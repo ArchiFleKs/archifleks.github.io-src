@@ -1,0 +1,66 @@
+## Basic Configuration
+
+baseurl = "https://archifleks.github.io/" 
+builddrafts = false
+canonifyurls = false
+languageCode = "en-US"
+
+contentdir = "content"
+layoutdir = "layouts"
+publishdir = "public"
+
+author = "Kevin Lefevre"
+title = "Kevin Lefevre"
+
+theme = "hugo-goa"
+
+## Hugo Built-in Features
+disqusShortname = "archifleks" # Comment out to disable Disqus.
+googleAnalytics = "UA-85614178-1"
+enableRobotsTXT = true
+
+## Site Settings
+[params]
+author = "Kevin Lefevre"
+intro = "Cloud Enginneer"
+description = "Now at <a href=\"https://osones.com/\">@Osones</a>. Container Evangelist, cURLing and scheduling stuff mostly on OpenStack and AWS. Trying to live the dream and not get fat."
+authorImage = "klefevre.png"
+dateFormat = "Jan 2, 2006"
+
+## Site Meta Settings
+[params.meta]
+description = "Simple minimalist theme"
+keywords = "minimalist,blog,goa,hugo,developer"
+
+## Social Accounts
+[params.social]
+github = "ArchiFleKs"
+#instagram = "<username>"
+linkedIn = "kevinlefevre/en"
+twitter = "ArchiFleKs"
+#facebook = "<username>"
+#google = "<username>"
+email = "lefevre.kevin@gmail.com"
+
+## Extras
+[params.extra]
+copyright = "© 2016. Kevin Lefevre. [Some Rights Reserved](https://creativecommons.org/licenses/by-sa/4.0/)." 
+poweredBy = false
+hightlightJS = true
+
+## Main Menu
+[[menu.main]]
+    name = "blog"
+    weight = 100
+    identifier = "blog"
+    url = "/blog/"
+[[menu.main]]
+    name = "about"
+    identifier = "about"
+    weight = 200
+    url = "/about/"
+[[menu.main]]
+    name = "Osones"
+    identifier = "osones"
+    weight = 300
+    url = "blog.osones.io"
