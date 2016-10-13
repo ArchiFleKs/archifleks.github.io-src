@@ -1,14 +1,13 @@
 +++
-draft = false
+draft = true
 comments = false
 slug = ""
-tags = [
-    kubernetes,
-    docker,
-    container
+tags = [ "kubernetes",
+         "docker",
+         "container"
 ]
 categories = [
-    Kubernetes
+    "Kubernetes"
 ]
 date = "2016-10-13T15:58:28+02:00"
 title = ""
