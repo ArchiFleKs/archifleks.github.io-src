@@ -23,7 +23,7 @@ enableRobotsTXT = true
 [params]
 author = "Kevin Lefevre"
 intro = "Cloud Enginneer"
-description = "Now at <a href=\"https://osones.com/\">@Osones</a>. Container Evangelist, cURLing and scheduling stuff mostly on OpenStack and AWS. Trying to live the dream and not get fat."
+description = "Now <a href=\"https://osones.com/\">@Osones</a>. Container Evangelist, cURLing and scheduling stuff mostly on OpenStack and AWS. Trying to live the dream and not get fat."
 authorImage = "klefevre.png"
 dateFormat = "Jan 2, 2006"
 
