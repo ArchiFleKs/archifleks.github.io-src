@@ -29,8 +29,8 @@ dateFormat = "Jan 2, 2006"
 
 ## Site Meta Settings
 [params.meta]
-description = "Simple minimalist theme"
-keywords = "minimalist,blog,goa,hugo,developer"
+description = "Kevin Lefevre"
+keywords = "cloud,openstack,aws,kubernetes,devops"
 
 ## Social Accounts
 [params.social]
@@ -63,4 +63,4 @@ hightlightJS = true
     name = "Osones"
     identifier = "osones"
     weight = 300
-    url = "blog.osones.io"
+    url = "/osones/"
