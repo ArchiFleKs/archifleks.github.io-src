@@ -1,6 +1,7 @@
 +++
 draft = false
-comments = false
+showpagemeta = true
+showcomments = true
 slug = ""
 tags = [ "kubernetes",
          "docker",
@@ -10,10 +11,8 @@ categories = [
     "Kubernetes"
 ]
 date = "2016-10-13T15:58:28+02:00"
-title = "Kubernetes Ingress and Let's Encrypt"
-showpagemeta = true
-showcomments = true
-
+title = "Kubernetes Ingress, Træfɪk and Let's Encrypt"
+description = "Kubernetes offers the Ingress feature, which abstract the configuration of a load balancer for services. Coupled with Træfɪk, a cloud reverse proxy, it is possible to add on the fly HTTPS encryption with Let's Encrypt."
 +++
 
 <center><img src="img/kubernetes/kubernetes.png" alt="Kubernetes" width="400" align="middle"></center>
