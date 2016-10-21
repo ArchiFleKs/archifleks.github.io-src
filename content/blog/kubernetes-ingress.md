@@ -10,9 +10,11 @@ tags = [ "kubernetes",
 categories = [
     "Kubernetes"
 ]
-date = "2016-10-13T15:58:28+02:00"
+date = "2016-10-13"
 title = "Kubernetes Ingress, Træfɪk and Let's Encrypt"
+serie = "Kubernetes deep dive"
 description = "Kubernetes offers the Ingress feature, which abstract the configuration of a load balancer for services. Coupled with Træfɪk, a cloud reverse proxy, it is possible to add on the fly HTTPS encryption with Let's Encrypt."
+
 +++
 
 <center><img src="img/kubernetes/kubernetes.png" alt="Kubernetes" width="400" align="middle"></center>
