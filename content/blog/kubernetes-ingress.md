@@ -18,8 +18,6 @@ showcomments = true
 
 <center><img src="img/kubernetes/kubernetes.png" alt="Kubernetes" width="400" align="middle"></center>
 
-This article originally appears on [Osones](http://blog.osones.com).
-
 Still with the alpha/beta features but not that much (it's been here since v1.1), this week we'll focus on the *Ingress* resource that makes publishing services a lot easier. First we'll see what *Ingress* and *Ingress Controller* are then we'll demo with an awesome cloud native reverse proxy that implements the Ingress feature. To stay swag, we'll throw in automatic and on the fly Let's Encrypt certificates generation, because it tastes better when it is free.
 
 Before we start you can check out [Romain's article](http://blog.osones.com/traefik-un-reverse-proxy-pour-vos-conteneurs.html) (for the moment it's only available in French) which describe what Treafik is, and how it works with Docker.
