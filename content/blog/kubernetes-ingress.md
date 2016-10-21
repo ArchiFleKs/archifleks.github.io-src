@@ -20,13 +20,11 @@ showcomments = true
 
 Still with the alpha/beta features but not that much (it's been here since v1.1), this week we'll focus on the *Ingress* resource that makes publishing services a lot easier. First we'll see what *Ingress* and *Ingress Controller* are then we'll demo with an awesome cloud native reverse proxy that implements the Ingress feature. To stay swag, we'll throw in automatic and on the fly Let's Encrypt certificates generation, because it tastes better when it is free.
 
-Before we start you can check out [Romain's article](http://blog.osones.com/traefik-un-reverse-proxy-pour-vos-conteneurs.html) (for the moment it's only available in French) which describe what Treafik is, and how it works with Docker.
-
 # Kubernetes Object
 
 ## Ingress Resource
 
-An *ingress* is a relativly simple object that define a set of applicative routes. Those rules will allow the configuration of a reverse proxy in front of Kubernetes services.
+An *ingress* is a relatively simple object that defines a set of applicative routes. Those rules will allow the configuration of a reverse proxy in front of Kubernetes services.
 
 Without *ingress*, Kubernetes services are directly exposed :
 
@@ -106,18 +104,18 @@ Google offers its own controller on GCE/GKE but there are others available based
 
 - [Nginx](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
 - [HA Proxy](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
-- [Traefik](https://docs.traefik.io/toml/#kubernetes-ingress-backend)
+- [Træfik](https://docs.traefik.io/toml/#kubernetes-ingress-backend)
 - Probably others
 
-# Let's Traefik and Let's Encrypt
+# Let's Træfik and Let's Encrypt
 
-What is [Traefik](https://traefik.io/) ?
+What is [Træfik](https://traefik.io/) ?
 
-> Traefik is a reverse proxy and load-balancer designed for micro services (e.g. Containers). It is very simple, written in Go, and supports a lot backend types : Consul, Etcd, Docker, Kubernetes, Mesos, etc. It can also be backed by a classic static configuration file and a mix of the above to act as a classic reverse proxy.
+> Træfik is a reverse proxy and load-balancer designed for micro services (e.g. Containers). It is very simple, written in Go, and supports a lot backend types : Consul, Etcd, Docker, Kubernetes, Mesos, etc. It can also be backed by a classic static configuration file and a mix of the above to act as a classic reverse proxy.
 
-In addition, Traefik supports the [ACME](https://github.com/ietf-wg-acme/acme/) protocol used by [Let's Encrypt](https://letsencrypt.org/). We are able to publish services and to support TLS automaticly and for free (and that's Cloud (automaticly, not free) !
+In addition, Træfik supports the [ACME](https://github.com/ietf-wg-acme/acme/) protocol used by [Let's Encrypt](https://letsencrypt.org/). We are able to publish services and to support TLS automaticly and for free (and that's Cloud (automaticly, not free) !
 
-## Traefik configuration for Kubernetes
+## Træfik configuration for Kubernetes
 
 First, we need to deploy the *ingress controller* with a *Deployment* :
 
@@ -169,15 +167,15 @@ spec:
 ```
 
 
-We'are using experimental Traefik image because it includes the latest commits for Kubernetes and also for the HTTP Auth basic and digest that have not yet been merged into stable. To store Let's Encrypt certificates, we need to use a volume otherwise they will be regenerated every time the pod reboots. Let's encrypt has a 20 certificates per week rate limit so be careful :)
+We'are using experimental Træfik image because it includes the latest commits for Kubernetes and also for the HTTP Auth basic and digest that have not yet been merged into stable. To store Let's Encrypt certificates, we need to use a volume otherwise they will be regenerated every time the pod reboots. Let's encrypt has a 20 certificates per week rate limit so be careful :)
 
 I'm using an *HostPath* for the demo but you can use whatever volume type suits your configuration.
 
 The container is supposed to listen to 80 and 443 via the `hostPort` directive, which is pretty much the same as doing a `docker -p 80:80 -p 443:443` but without NAT. If you are using Kubernetes with [CNI](https://github.com/containernetworking/cni) as a [network plugin](http://kubernetes.io/docs/admin/network-plugins/), the `hostPort` directive is ignored and the container does not use the host network. A workaround is to use a `NodePort` or `ExternalIP` service.
 
-I don't know what you think about but it is a neat solution compare to using `HostPort`, especially in a cluster when you can use multiple Traefik instances and a Cloud Load Balancer (e.g on AWS).
+I don't know what you think about but it is a neat solution compare to using `HostPort`, especially in a cluster when you can use multiple Træfik instances and a Cloud Load Balancer (e.g on AWS).
 
-Optional, a service in front of Traefik :
+Optional, a service in front of Træfik :
 
 ```YAML
 ---
@@ -199,9 +197,9 @@ spec:
     - 178.32.28.59
 ```
 
-In my scenario, I have got only one node so I'm using an `externalIP`, all traffic to port 80 and 443 will be redirected to Traefik pod.
+In my scenario, I have got only one node so I'm using an `externalIP`, all traffic to port 80 and 443 will be redirected to Træfik pod.
 
-Still optional, it is possible to define a service to make Traefik webui accessible (it will be accessible from the outside and also published via Traefik and an *ingress* rule) :
+Still optional, it is possible to define a service to make Træfik webui accessible (it will be accessible from the outside and also published via Træfik and an *ingress* rule) :
 
 ```YAML
 ---
@@ -219,7 +217,7 @@ spec:
       name: webui
 ```
 
-Finally and the most important, we define a *configmap* containing Traefik configuration :
+Finally and the most important, we define a *configmap* containing Træfik configuration :
 
 ```YAML
 apiVersion: v1
@@ -256,7 +254,7 @@ We define entrypoints : `http` and `https` and a redirection between from `http`
 Then for Let's Encrypt configuration :
 
 - `email = "lefevre.kevin@gmail.com"` : username
-- `storageFile = "/acme/acme.json"` : certificates storage file (it is also possible to use a KV store to share certificates between Traefik instances)
+- `storageFile = "/acme/acme.json"` : certificates storage file (it is also possible to use a KV store to share certificates between Træfik instances)
 - `entryPoint = "https"` : entrypoint whre ACME is enabled
 - `onDemand = true` : enable on the fly generation
 - `onHostRule = true` : enable generation based on backend discovery
@@ -264,7 +262,7 @@ Then for Let's Encrypt configuration :
 - `[[acme.domains]]`
 - `main = "archifleks.net"` : Authorized domain
 
-Domain validation is done via DNS, it's important to have a record pointing to the Traefik node or to the load-balancer in front of the service (via cloud provider). In my case, I have a record `* IN A A.B.C.D` for `archifleks.net`.
+Domain validation is done via DNS, it's important to have a record pointing to the Træfik node or to the load-balancer in front of the service (via cloud provider). In my case, I have a record `* IN A A.B.C.D` for `archifleks.net`.
 
 
 Once all these files are ready, it's possible to merge them all in a single YAML or to pass each of them to Kubernetes. The files used for this article are available on [Github](https://github.com/ArchiFleKs/containers/tree/master/kubernetes/zero.vsense.fr)
@@ -411,7 +409,7 @@ sickrage-3769118260-h5c78                    1/1       Running   7          21d
 traefik-ingress-controller-379161919-3lhff   1/1       Running   0          51s
 ```
 
-Traefik startup logs :
+Træfik startup logs :
 
 ```
 time="2016-09-29T13:54:54Z" level=info msg="Preparing server https &{Network: Address::443 TLS:0xc42030ac00 Redirect:<nil> Auth:0xc4203f6df0}"
@@ -457,7 +455,7 @@ cat acme.json
 
 ```
 
-For now, Traefik is not serving any backend, to do so we must define *ingress* rules with [`ingress.yml`](https://raw.githubusercontent.com/ArchiFleKs/containers/master/kubernetes/zero.vsense.fr/ingress.yml) :
+For now, Træfik is not serving any backend, to do so we must define *ingress* rules with [`ingress.yml`](https://raw.githubusercontent.com/ArchiFleKs/containers/master/kubernetes/zero.vsense.fr/ingress.yml) :
 
 ```
 kubectl create -f ingress.yml
@@ -466,7 +464,7 @@ ingress "traefik" configured
 ingress "kubernetes-dashboard" configured
 ```
 
-Traefik logs:
+Træfik logs:
 
 ```
 time="2016-09-29T14:05:51Z" level=debug msg="Waited for kubernetes config, OK"
@@ -583,9 +581,9 @@ Ok, for the demo I had to use insecure mode because of the staging API, truth be
 
 *Ingress* feature really does simplify application depoyment on Kubernetes. It adds another abstraction layer on top of a complex feature, especially in the container world, where time to live is very low and reverse proxies have to be dynamic.
 
-There are few *ingress controller* for now, Google is pushing its but it is only available on GCE. Another community maintained is the Nginx but it does not natively support Kubernetes and/or Let's Encrypt where Traefik does.
+There are few *ingress controller* for now, Google is pushing its but it is only available on GCE. Another community maintained is the Nginx but it does not natively support Kubernetes and/or Let's Encrypt where Træfik does.
 
-Even if very few options are available in Traefik, there is a strong community and features are coming up quickly. Traefik already supports multiple backends such as Kubernetes, Mesos, Consul but also Let's Encrypt as we saw.
+Even if very few options are available in Træfik, there is a strong community and features are coming up quickly. Træfik already supports multiple backends such as Kubernetes, Mesos, Consul but also Let's Encrypt as we saw.
 
 About Kubernetes, the project is becoming more and more pluggable, with a high abstraction level, and rapidly evolving. For exemple with *FlexVolume* and *Dynamic Provisioning*, which allow custom storage solutions to interface with kubernetes without touching core Kubernetes code. It is the same thing with *ingress* controller where (in addition to OSS solution) allow editor to publish software comatible with Kubernetes and the *ingress* feature.
 
