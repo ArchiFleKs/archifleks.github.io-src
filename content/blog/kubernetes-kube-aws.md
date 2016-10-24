@@ -36,7 +36,7 @@ We re deploying Kubernetes on CoreOS Linux : a minimalist distribution made for 
   * [Flannel](https://coreos.com/flannel/docs/latest/) : overlay network
   * [Fleet](https://coreos.com/fleet/) : low level orchestrator (distributed systemd)
 
-Member of the *Open Container Initiative* (OCI), *Core, Inc* was among the first to push Kubernetes usage in production, and offers a packaged solution called Tectonic.
+Member of the *Open Container Initiative* (OCI), *Core Inc* was among the first to push Kubernetes usage in production, and offers a packaged solution called Tectonic.
 
 CoreOS is also the perfect distribution to run Kubernetes, even without using the commercial version.
 
@@ -321,7 +321,7 @@ Events:
 ```
 For now, Kubernetes does not support the creation of Route53 alias dynamicly. The service is accessible outside at : a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com:25565 which is not very practical.
 
-We can create the record via awscli, `route53-minecraft.json` :
+We can create `route53-minecraft.json` :
 
 ```Json
 {

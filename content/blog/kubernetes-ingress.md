@@ -99,16 +99,16 @@ Alone, ingress definitions don't do much. To be applied, they need an *ingress c
 
 A controller does the following :
 
-- Poll Kubernetes API
-- Apply configuration base on template
-- Reload service
+  * Poll Kubernetes API
+  * Apply configuration base on template
+  *  Reload service
 
 Google offers its own controller on GCE/GKE but there are others available based on multiples OSS that evolve to support Kubernetes :
 
-- [Nginx](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
-- [HA Proxy](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
-- [Træfik](https://docs.traefik.io/toml/#kubernetes-ingress-backend)
-- Probably others
+  * [Nginx](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
+  * [HA Proxy](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
+  * [Træfik](https://docs.traefik.io/toml/#kubernetes-ingress-backend)
+  * Probably others
 
 # Let's Træfik and Let's Encrypt
 
@@ -256,14 +256,14 @@ We define entrypoints : `http` and `https` and a redirection between from `http`
 
 Then for Let's Encrypt configuration :
 
-- `email = "lefevre.kevin@gmail.com"` : username
-- `storageFile = "/acme/acme.json"` : certificates storage file (it is also possible to use a KV store to share certificates between Træfik instances)
-- `entryPoint = "https"` : entrypoint whre ACME is enabled
-- `onDemand = true` : enable on the fly generation
-- `onHostRule = true` : enable generation based on backend discovery
-- `caServer = "https://acme-staging.api.letsencrypt.org/directory"` : uses staging api, to go to production, comment or remove this line
-- `[[acme.domains]]`
-- `main = "archifleks.net"` : Authorized domain
+  * `email = "lefevre.kevin@gmail.com"` : username
+  * `storageFile = "/acme/acme.json"` : certificates storage file (it is also possible to use a KV store to share certificates between Træfik instances)
+  * `entryPoint = "https"` : entrypoint whre ACME is enabled
+  * `onDemand = true` : enable on the fly generation
+  * `onHostRule = true` : enable generation based on backend discovery
+  * `caServer = "https://acme-staging.api.letsencrypt.org/directory"` : uses staging api, to go to production, comment or remove this line
+  * `[[acme.domains]]`
+  * `main = "archifleks.net"` : Authorized domain
 
 Domain validation is done via DNS, it's important to have a record pointing to the Træfik node or to the load-balancer in front of the service (via cloud provider). In my case, I have a record `* IN A A.B.C.D` for `archifleks.net`.
 
@@ -543,8 +543,9 @@ time="2016-09-29T14:06:10Z" level=debug msg="Got certificate for domains [seedbo
 ```
 
 We can see 2 things :
-- Backends are created on *ingress* rules detection
-- Certificates generation is done after backend addition to the pool
+
+  * Backends are created on *ingress* rules detection
+  * Certificates generation is done after backend addition to the pool
 
 Connectivity check :
 
