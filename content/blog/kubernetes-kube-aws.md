@@ -13,7 +13,7 @@ categories = [
 date = "2016-05-13"
 title = "Kubernetes on AWS with kube-aws"
 serie = "Kubernetes deep dive"
-description = "Deploy a Kubernetes cluster on AWS, \"the CoreOS way\"."
+description = "Deploy a Kubernetes cluster on AWS with CoreOS."
 
 +++
 
