@@ -1,5 +1,5 @@
 +++
-draft = true
+draft = false
 showpagemeta = true
 showcomments = true
 slug = ""
@@ -19,58 +19,62 @@ description = "Deploy a Kubernetes cluster on AWS, \"the CoreOS way\"."
 
 <center><img src="img/kubernetes/kubernetes.png" alt="coreos" width="400" align="middle"></center>
 
-Osones vous propose un dossier sur Kubernetes. Nous allons dans ce premier article déployer un cluster Kubernetes sur AWS, puis tester son fonctionnement de base - en particulier les fonctionnalités liées au Cloud Provider. Le but n'est pas d'installer à la main Kubernetes étape par étape mais de montrer une méthode de déploiement, sur un Cloud Provider que nous utilisons : Amazon Web Services.
+This article originally appears on [Osones](http://blog.osones.com).
 
-# Le Choix de CoreOS pour Kubernetes
+This is the first article of the Kubernetes series. In this article, we are going to deploy a Kubernetes cluster on AWS and test some features - mostly the ones about cloud provider. The goal is not to deploy a cluster manually but to show a deployment method on a cloud provider we are using @Osones : Amazon Web Services
 
-Kubernetes est un projet Open Source lancé en 2014 par Google. Popularisé en quelques années seulement, ce COE (*Container Orchestration Engine*) permet de gérer le cycle de vie d'applications de type [12 factor](http://12factor.net/) / micro-services à l'aide de conteneurs. Kubernetes propose des fonctionnalités de clustering, de déploiement automatique et de scalabilité ainsi que des API ouvertes. Les configurations se font à l'aide de fichiers JSON ou YAML.  
-À noter que d'autres COE existent, parmi lesquels Docker Swarm et Apache Mesos.  
+# CoreOS : distribution of choice for Kubernetes
 
-Nous avons fait ici le choix de la distribution Linux CoreOS, une distribution minimaliste orientée conteneurs dont nous avons déjà parlé dans des [précédents](discovery-service-avec-consul.html) [articles](coreos-cluster-et-docker.html). Le projet Open Source "CoreOS" est porté par la société *CoreOS, Inc*, à l'origine de nombre services OpenSource orientés conteneurs tels que :
+Kubernetes is an Open Source project launched in 2014 by Google. It became popular very quickly. This COE (*Container Orchestration Engine) can manage the life cycle of cloud native / micro services applications ([12 factor](http://12factor.net/) with containers. Kuberntes allows for clustering, automated deployment, horizontal scalability, with opened APIs. Configuration can be written in JSON or YAML.
+
+Other COE exist out there, such as Apache Mesos or Docker Swarm.
+
+We re deploying Kubernetes on CoreOS Linux : a minimalist distribution made for containers. The project is Open Source and originally from the CoreOS company, which also initiated lots of Open Source projets :
 
   * [RKT](https://coreos.com/rkt/) : container engine
   * [Etcd](https://coreos.com/etcd/) : K/V store
   * [Flannel](https://coreos.com/flannel/docs/latest/) : overlay network
-  * [Fleet](https://coreos.com/fleet/) : systemd distribué
+  * [Fleet](https://coreos.com/fleet/) : low level orchestrator (distributed systemd)
 
-Membre de l'*Open Container Initiative* (OCI), *CoreOS, Inc* a également compté parmi les premiers à pousser l'utilisation de Kubernetes en production, et propose une solution packagée de Kubernetes appelée Tectonic.
-CoreOS est donc une distribution de choix pour faire fonctionner Kubernetes, même sans avoir recours à la version commerciale.
+Member of the *Open Container Initiative* (OCI), *Core, Inc* was among the first to push Kubernetes usage in production, and offers a packaged solution called Tectonic.
+
+CoreOS is also the perfect distribution to run Kubernetes, even without using the commercial version.
 
 # The "CoreOS way"
 
-Dans le respect des best practices, les fonctionnalités suivantes sont déployées :
+To respect best practices, the following features are deployed :
 
-- Utilisation de TLS pour sécuriser les communications;
-- Utilisation du service de discovery de Kubernetes;
-- Utilisation d'un Cloud Provider : AWS.
+  * TLS to secure communication
+  * Service Discovery (SkyDNS) for Kubernetes
+  * Cloud provider features : AWS
 
-Kubernetes supporte de multiples Cloud Providers, dont AWS, pour permettre l'utilisation de composants externes mis à disposition. Par exemple, dans le cas de la publication de services, il est possible d'automatiquement provisionner un ELB (*Elastic Load Balancer*) ainsi que les règles de filtrage (security groups) associées.
-Nous utiliserons dans cet article un outil de déploiement CoreOS appelé [*kube-aws*](https://coreos.com/kubernetes/docs/latest/kubernetes-on-aws.html), permettant de déployer facilement un cluster dans AWS.
+Kuberntes supports multiple cloud prociders which allow the use of external components available in the cloud. For example, to publish services, it is possible to dynamicly provvision an *Elastic Load balancer* (ELB) and associated security rules.
 
-# Préparation du cluster
+# Cluster bootstrap
 
-Pour préparer le cluster, nous allons utiliser [*kube-aws*](https://github.com/coreos/coreos-kubernetes/tree/master/multi-node/aws), un outil qui permet de gérer un cluster Kubernetes en mode Infrastructure as Code. À partir d'un template YAML, *kube-aws* génère un template CloudFormation et le provisionne sur AWS. Les templates générés peuvent par exemple être stockés sur un dépôt Git, comme pour les templates [Terraform](https://www.terraform.io/), afin d'être versionnés.
+To prepare the cluster, we are going to use [*kube-aws*](https://github.com/coreos/coreos-kubernetes/tree/master/multi-node/aws), a tools developed by CoreOS that used CloudFormation stacks to deploy on AWS. From A YAML template, *kube-aws* generates a CloudFormation template and userdate. Generated templates can be stored onto a version control system such as git, like [Terraform](https://www.terraform.io/) templates.
 
-## Pré-requis
+## Prerequisite
 
-Les objets sont multiples dans Kubernetes :
+There are several objects in Kubernetes :
 
-- Pod : plus petit élement unitaire, peut contenir un ou plusieurs conteneurs fonctionnant ensemble, avec des composants partagés et qui doivent former un composant logique
-- Replication Controller : contrôle la durée de vie des pods notamment le nombre de pods dans un cluster à un instant T
-- Services : permet de fournir un niveau d'abstraction (point d'entrée unique) aux pods qui peuvent physiquement se trouver sur différents hôtes du cluster et être répliqués par les replication controllers
+  * Pod : this is the smallest element, it can include one or more containers that are working together to form a single logical component.
+  * Replication Controller : manage the lifecyle of PODs, by ensuring a certain number of PODs is always availabale in the cluster (replicas).
+  * Services : abstraction layer between external network and the cluster, it's a unique entry point wichi is then load balance between a set of pods managed by a replication controller.
 
-L'installation et la gestion de Kubernetes nécessitent l'installation de 2 binaires, par exemple sur linux dans `/usr/local/bin` :
+To install and manage Kubernetes, we need two binaries, you can drop them in `/usr/local/bin` :
 
-- [*kube-aws*](https://github.com/coreos/coreos-kubernetes/releases) : pré-configurer le cluster et le déployer
-- kubectl : contrôle de Kubernetes via les API :
+  * [*kube-aws*](https://github.com/coreos/coreos-kubernetes/releases) : cluster configuration and bootstrap
+  * kubectl : CLI tool to access Kubernetes APIs :
 
 ```
 curl -O https://storage.googleapis.com/kubernetes-release/release/v1.2.3/bin/linux/amd64/kubectl
 ```
+To be able to connect to EC2 instances, we need on SSH key and a valid IAM account to deploy the infrastrcture on AWS. TO secure communications inside the cluster, we are using *AWS Key Management Services* (KMS).
 
-Pour pouvoir se connecter aux instances, si besoin, il est nécessaire de disposer d'une clé SSH sur AWS EC2 ainsi que d'un compte IAM valide afin de pouvoir provisionner l'infrastructure sur AWS. De plus, afin d'assurer la sécurité des communications au sein du cluster ainsi qu'entre les composants d'AWS, *AWS Key Management Service (KMS)* est utilisé. Pour générer une clé via *awscli* :
+To generate a Key with *awscli* :
 
-```
+```JSON
 aws --profile osones kms --region=eu-west-1 create-key --description="osones-k8s-clust kms"
 {
     "KeyMetadata": {
@@ -86,18 +90,18 @@ aws --profile osones kms --region=eu-west-1 create-key --description="osones-k8s
 }
 ```
 
-## Initialisation du cluster
+## Cluster initialization
 
-Dans un premier temps, il faut exporter les credentials du compte IAM.
+First we need AWS credentials :
 
-```
+```Bash
 $ export AWS_ACCESS_KEY_ID=AKID1234567890
 $ export AWS_SECRET_ACCESS_KEY=MY-SECRET-KEY
 ```
 
-Puis, dans un répertoire dédié, on initialise le cluster.
+Then in a dedicated directory :
 
-```
+```Bash
 kube-aws init --cluster-name=osones-k8s-clust \
 --external-dns-name=k8s.osones.io \
 --region=eu-west-1 \
@@ -111,11 +115,11 @@ Next steps:
 2. Use the "kube-aws render" command to render the stack template.
 ```
 
-Cette commande génère un fichier `cluster.yaml` pré-rempli qui définit les options du cluster. Avant de générer la stack CloudFormation, il est possible de la customiser avec par exemple, le nombre de workers par défaut, la zone DNS Route 53, la taille des instances, etc.
+This command generates a `cluster.yaml` file with some customizable cluster options. Before generating the CloudFormation stack, it is possible de review the file, and change the number of default node, availability zone, route53, instance type, etc. The file is self documented.
 
-Par exemple, le fichier `cluster.yaml` pour le cluster Osones :
+`cluster.yaml` file for Osones cluster :
 
-```
+```YAML
 clusterName: osones-k8s-clust
 externalDNSName: k8s.osones.io
 releaseChannel: alpha
@@ -132,10 +136,11 @@ workerInstanceType: t2.small
 workerRootVolumeSize: 30
 ```
 
-Dans cet exemple, le cluster est déployé dans la région `eu-west-1`, dans l'AZ `eu-west-1b`. Nous utilisons des instances `t2.medium` avec des disques de 30Go pour le contrôleur et des instances `t2.small` avec 30 Go de disque pour les nœuds worker. Il y aura au départ 2 workers. Les API seront accessibles à l'adresse `k8s.osones.io` et l'enregistrement DNS sera créé au moment de la création de la stack sur la zone `osones.io` déjà gérée sur AWS Route53.
+In this example, we are using the region `eu-west-1` and the AZ `eu-west-1b`. The master is a 30Go `t2.medium` instance and workers are 30Go `t2.small` instances. We are starting with 2 worker nodes. The APIs will be accessible at the address `k8s.osones.io`, a route53 records will be automaticly created on the `osones.io` zone.
 
-Ensuite, à partir du fichier `cluster.yaml` on prépare les templates CloudFormation.
-```
+Then from this file, we generate the CloudFormation template :
+
+```Bash
 kube-aws render
 Success! Stack rendered to stack-template.json.
 
@@ -145,23 +150,23 @@ Next steps:
 3. Start the cluster with "kube-aws up".
 ```
 
-Une fois le rendu effectué on se retrouve avec l'arborescence suivante :
+Once the render finishes, we get the following structure :
 
-```
+```Bash
 drwxr-xr-x 4 klefevre klefevre 4.0K May  9 14:57 .
 drwxr-xr-x 3 klefevre klefevre 4.0K May  9 11:31 ..
 -rw------- 1 klefevre klefevre 3.0K May  9 14:50 cluster.yaml
-drwx------ 2 klefevre klefevre 4.0K May  9 14:57 credentials -> contient les ressources pour le TLS
--rw------- 1 klefevre klefevre  540 May  9 14:57 kubeconfig -> fichiers de configuration pour l'utilisation de kubectl
--rw-r--r-- 1 klefevre klefevre  16K May  9 14:57 stack-template.json -> le template CloudFormation géneré
-drwxr-xr-x 2 klefevre klefevre 4.0K May  9 14:57 userdata -> contient les fichiers cloud-init pour le master ainsi que les slaves (workers)
+drwx------ 2 klefevre klefevre 4.0K May  9 14:57 credentials -> TLS resources
+-rw------- 1 klefevre klefevre  540 May  9 14:57 kubeconfig -> configuration files for kubecetl
+-rw-r--r-- 1 klefevre klefevre  16K May  9 14:57 stack-template.json -> generated CloudFormation template
+drwxr-xr-x 2 klefevre klefevre 4.0K May  9 14:57 userdata -> userdata (cloud-init) for master and worker nodes
 ```
 
-Pour information, les *userdata* générées avec *kube-aws* sont conformes à la [documentation d'installation manuelle](https://coreos.com/kubernetes/docs/latest/getting-started.html).
+Generated userdata are in sync with the [manual installation instructions](https://coreos.com/kubernetes/docs/latest/getting-started.html).
 
-Enfin on valide les userdata ainsi que la stack CloudFormation :
+You can edit CloudFormation stack and userdata before validating :
 
-```
+```Bash
 kube-aws validate
 Validating UserData...
 UserData is valid.
@@ -177,11 +182,11 @@ stack template is valid.
 Validation OK!
 ```
 
-# Déploiement du cluster
+# Cluster bootstrap
 
-Une fois toutes les étapes effectuées, on déploie le cluster avec la simple commande `kube-aws up`.
+Finally, we can deploy with a simple command `kube-aws up` :
 
-```
+```Bash
 kube-aws up
 Creating AWS resources. This should take around 5 minutes.
 Success! Your AWS resources have been created:
@@ -193,18 +198,19 @@ The containers that power your cluster are now being dowloaded.
 You should be able to access the Kubernetes API once the containers finish downloading.
 ```
 
-Afin de valider le bon fonctionnement du cluster, on peut par exemple lister les nœuds du cluster :
+The stack progression can be monitored on the AWS console, after that, we can check the cluster state :
 
-```
+```Bash
 kubectl --kubeconfig=kubeconfig get nodes
 NAME                                       STATUS    AGE
 ip-10-0-0-148.eu-west-1.compute.internal   Ready     4m
 ip-10-0-0-149.eu-west-1.compute.internal   Ready     3m
 ```
 
-Le fichier `kubeconfig` contient les credentials ainsi que les certificats TLS pour accéder aux API de Kubernetes :
 
-```
+`kubeconfig` file has the credentials and TLS certificates to access the APIs :
+
+```YAML
 apiVersion: v1
 kind: Config
 clusters:
@@ -226,15 +232,15 @@ users:
 current-context: kube-aws-osones-k8s-clust-context
 ```
 
-L'enregistrement DNS a automatiquement été créé sur Route53, et l'on remarque bien que la connexion aux API s'effectue via HTTPS.
+DNS record is automatically created on Route53, and API connections are secured via TLS.
 
-# Test d'un simple service
+# Simple service demo
 
-Nous allons tester simplement le fonctionnement du cluster pour terminer cet article. Avec par exemple, un serveur Minecraft, publié automatiquement via un ELB.
+To finish this article, we are going to publish a simple service, Minecraft, by using an ELB.
 
-Dans un premier temps, on définit le *replication controller* `deployment-minecraft.yaml`.
+First, we define a *replication controller* : `deployment-minecraft.yaml`.
 
-```
+```Yaml
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -256,9 +262,9 @@ spec:
         - containerPort: 25565
 ```
 
-Dans ce cas, nous avons un seul réplica. Ce qui signifie un seul pod Minecraft. La sélection se fait grâce au label, qui permet au replication controller de matcher le pod avec le même label (ici *minecraft*). On vérifie avec kubectl :
+In that case, there is a single replicas, so only one Minecraft pod. A replication controller matches pod via the label directive, it matches pods with the label `app=minecraft`.
 
-```
+```Bash
 kubectl --kubeconfig=kubeconfig create -f deployment-minecraft.yaml
 replicationcontroller "minecraft" created
 
@@ -271,11 +277,11 @@ NAME              READY     STATUS    RESTARTS   AGE
 minecraft-wj65z   1/1       Running   0          1m
 ```
 
-Pour le moment, le pod est accessible uniquement depuis l'intérieur du cluster, pour le rendre accessible depuis l'extérieur nous allons créer un service au sens Kubernetes et utiliser la fonctionnalité de load balancing fournie par le Cloud Provider. Kubernetes va provisionner un ELB sur AWS, ouvrir les security groups et ajouter les nœuds Kubernetes en backend automatiquement.
+So Minecraft is running, for now the pod is only accessible inside the cluster. To make it accessible outisde the cluster we are going to create a Kubernetes service and use the load balancing feature by the cloud provider. Kubernetes is going to provision an ELB, open security groups and add the worker nodes into the backend pool automatically.
 
-Le fichier `service-minecraft.yaml` :
+`service-minecraft.yaml` :
 
-```
+```YAML
 apiVersion: v1
 kind: Service
 metadata:
@@ -290,9 +296,9 @@ spec:
     type: LoadBalancer
 ```
 
-Ici, le load balancer écoute sur le même port que le pod (le port 25565, par défaut pour Minecraft) et forward le trafic vers les workers. Pour avoir le détail :
+Load balancer is listening on the same port as the pods (port 25565, Minecraft default) and forward traffic to the workers. To get the details :
 
-```
+```Bash
 kubectl --kubeconfig=kubeconfig create -f service-minecraft.yaml
 kubectl --kubeconfig=kubeconfig describe service minecraft
 Name:                   minecraft
@@ -313,12 +319,11 @@ Events:
   41m           41m             1       {service-controller }                   Normal          CreatedLoadBalancer     Created load balancer
 
 ```
+For now, Kubernetes does not support the creation of Route53 alias dynamicly. The service is accessible outside at : a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com:25565 which is not very practical.
 
-Pour le moment, Kubernetes ne supporte pas la configuration automatique d'un alias Route53 vers le load balancer. Le service est accessible depuis l'extérieur à l'adresse : a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com sur le port par défaut (25565), ce qui n'est pas très pratique.
+We can create the record via awscli, `route53-minecraft.json` :
 
-Il est possible d'automatiser la création d'un enregistrement DNS en utilisant la CLI AWS. Dans un fichier `route53-minecraft.json` :
-
-```
+```Json
 {
   "Comment": "minecraft dns record",
   "Changes": [
@@ -339,9 +344,9 @@ Il est possible d'automatiser la création d'un enregistrement DNS en utilisant 
 }
 ```
 
-Ensuite via l'awscli :
+Then via awscli :
 
-```
+```Bash
 aws --profile osones route53 change-resource-record-sets --hosted-zone-id Z2BYZVP5DZBBWK --change-batch file://route53-minecraft.json
 
 host minecraft.osones.io
@@ -350,10 +355,12 @@ a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com has address 5
 a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com has address 52.19.180.100
 ```
 
-Le champs *hosted-zone-id* correspond à l'ID de zone Route53 dans laquelle on ajoute l'enregistrement. On peut ensuite se connecter au service depuis l'extérieur à l'adresse `minecraft.osones.io`.
+*hosted-zone-id* must match ID of the Route53 zone in which we create the records. After that, we can access our services from a friendly URL : `minecraft.osones.io`.
 
 # Conclusion
 
-Il existe beaucoup de méthodes de déploiement pour Kubernetes, que ce soit via Ansible, Puppet ou Chef. Elles dépendent également du Cloud Provider utilisé. CoreOS est l'une des premières distributions à s'être intégrée avec Kubernetes, et à supporter complètement AWS. Dans une suite d'articles nous nous détacherons de la partie installation et nous nous intéresserons plus précisément au fonctionnement de Kubernetes ainsi qu'aux differents objets disponibles et leurs cas d'utilisation.
+There are serveral deployment methods for Kubernetes, via Ansible, Puppet, or Chef. They depends on the cloud provider. CoreOS is just one of them and one of the first to have integrated with Kubernetes and supported AWS.
+
+In a next series of articles, we'll move forward installation and focus on running Kubernetes and what the other available features are.
 
 **Kevin Lefevre**
