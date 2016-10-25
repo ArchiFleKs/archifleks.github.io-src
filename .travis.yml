@@ -1,18 +1,20 @@
 language: python
 env:
   global:
-    - HUGO_VERSION=0.17
+  - HUGO_VERSION=0.17
+before_install:
+- openssl aes-256-cbc -K $encrypted_ba844ae62b2d_key -iv $encrypted_ba844ae62b2d_iv -in deploy-archifleks.github.io.key.enc -out deploy-archifleks.github.io.key -d
 install:
-  - pip install ghp-import
+- pip install ghp-import
 script:
-  - wget -qO- "https://github.com/spf13/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" | tar xvz --strip-components=1
-  - ./hugo_${HUGO_VERSION}_linux_amd64
-  - ghp-import public
+- wget -qO- "https://github.com/spf13/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" | tar xvz --strip-components=1
+- "./hugo_${HUGO_VERSION}_linux_amd64"
+- ghp-import public
 branches:
   only:
-    - master
+  - master
 after_success:
-  - eval "$(ssh-agent -s)"
-  - chmod 600 .travis/deploy_key.pem
-  - ssh-add .travis/deploy_key.pem
-  - git push git@github.com:archifleks/archifleks.github.io.git gh-pages:master
+- eval "$(ssh-agent -s)"
+- chmod 600 deploy-archifleks.github.io.key
+- ssh-add deploy-archifleks.github.io.key
+- git push git@github.com:archifleks/archifleks.github.io.git gh-pages:master
