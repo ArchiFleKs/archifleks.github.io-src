@@ -20,7 +20,7 @@ description = "Discover Torus : an etcd backed distributed file system that can 
 
 <center><img src="img/kubernetes/kubernetes.png" alt="coreos" width="400" align="middle"></center>
 
-This article originally appears on [Osones](http://blog.osones.com/en/kubernetes-ingress-controller-with-traefik-and-lets-encrypt.html).
+This article originally appears on [Osones](http://blog.osones.com/en/kubernetes-torus-a-cloud-native-distributed-file-system.html).
 
 Still in the Kubernetes series, this week let's take a look at Torus, a cloud native distributed file system developed by CoreOS which give persistent storage to Kubernetes PODs.
 
