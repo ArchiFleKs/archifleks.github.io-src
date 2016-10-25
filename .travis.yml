@@ -5,8 +5,8 @@ env:
 install:
   - pip install ghp-import
 script:
-  - wget -qO- "https://github.com/spf13/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" | tar xvz
-  - ./hugo_$HUGO_VERSION_linux_amd64
+  - wget -qO- "https://github.com/spf13/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" | tar xvz --strip-components=1
+  - ./hugo_${HUGO_VERSION}_linux_amd64
   - ghp-import public
 branches:
   only:
