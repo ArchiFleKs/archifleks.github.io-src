@@ -7,6 +7,9 @@ install:
 script:
   - chmod +x ./hugo_$HUGO_VERSION_linux_amd64
   - ./hugo_$HUGO_VERSION_linux_amd64
+branches:
+  only:
+    - master
 deploy:
   - ghp-import public
   - git push git@github.com:archifleks/archifleks.github.io.git gh-pages:master
