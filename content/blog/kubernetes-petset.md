@@ -39,16 +39,6 @@ Les PetSet sont similaires aux *deployment* et *replication controller* mais pro
     - Ordre de démarrage des Pods.
     - Découverte des pairs.
 
-
-  
-<br />
-<center>
-<a href="http://bit.ly/ContactezOsones"><img src="images/campagnes-osones/contactezosones.png" alt="Contactez des Experts AWS certifiés !" align="middle"></center>
-</a>
- 
- 
-
-<br />
 # Avant les PetSets
 
 Il est bien sur déjà possible d'utiliser de telles applications, par exemple via l'utilisation de *DaemonSet* (pour faire fonctionner un pod par nœud) ou de *deployment*, puis combiner à ce que l'on appelle un service *headless* (sans clusterIP ou NodePort).
@@ -430,12 +420,12 @@ Kubernetes fonctionne déjà sur de multiples Cloud Provider et avec la [fédér
 
 
 <br />
-# Aller plus loin : 
+# Aller plus loin :
 
 ## (Re)découvrez les derniers articles Osones !
- 
+
 Si vous les avez loupés, voici les nouveaux articles sur le Blog Osones : 
- 
+
 * [Kubernetes : Introduction aux PetSet et bootstrap d'un cluster Consul](http://blog.osones.com/kubernetes-introduction-aux-petset-et-bootstrap-dun-cluster-consul.html) 
 * [Présentation de Torus, un système de fichier distribué cloud natif](http://blog.osones.com/presentation-de-torus-un-systeme-de-fichier-distribue-cloud-natif.html) 
 * [Serverless avec AWS : cas concret](http://blog.osones.com/serverless-avec-aws-cas-concret.html)
