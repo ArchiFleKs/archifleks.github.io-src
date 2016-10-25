@@ -1,5 +1,5 @@
 +++
-draft = true
+draft = false
 showpagemeta = true
 showcomments = true
 slug = ""
@@ -46,33 +46,32 @@ In June 2016, CoreOS annonced a new distributed file system : Torus, whose goal 
 
 In the spirit of micro services and GIFEE (*Google Infrastructure For Everyone Else*), Torus focuses on the storage : Metadata and consensus are enforced by *etcd* : A highly scalable key/value store used by Kubernetes or Docker Swarm. Torus supports all the features of modern file system such as replication and load balancing of data.
 
-What are the differences compared to  GlusterFS 
+What are the differences with GlusterFS or NFS ? Torus provides only block storage for now via the *NBD* protocol (Network Block Device). By design, it will be possible to expose other storage types like object storage or file system. Torus is written in Go and statically linked, which makes it easily portable into containers. Torus is split into 3 binaries :
 
-Quelles sont les différences avec GlusterFS ou NFS ? Torus fournit pour le moment uniquement un stockage de type bloc via le protocole *nbd* (Network Block Device). De part son architecture, il sera possible ensuite d'exposer d'autres types de stockage notamment de l'objet ou encore du système de fichiers (comme NFS ou GlusterFS). Torus est également écrit en Go, compilé statiquement, ce qui le rend facilement portable et conteneurisable. Torus se décompose en 3 binaires :
+  * *torusd* : Torus daemon
+  * *torusctl* : CLI to manage Torus
+  * *torusblk* : CLI to manage Torus Block Devices
 
-- *torusd* : le démon Torus
-- *torusctl* : contrôle du cluster et des volumes
-- *torusblk* : contrôle du montage/démontage des volumes bloc
+# Kubernetes integration with Flex Volume
 
-# Intégration à Kubernetes : Flex Volume
+Torus is independent from Kubernetes. It can be installed as a standalone application and expose volumes via NBD. These volume can then be used like any other block device.
 
-Torus est indépendant de Kubernetes. Il peut s'installer de manière autonome et exposer ses volumes via le protocole NDB. Ces volumes peuvent ensuite être utilisés comme n'importe quel volume bloc.
+Kubernetes, in addition to built-in volumes, has a FlexVolume plugin that allows custom storage solution to implements a storage drivers without touching the heart of Kubernetes. *torusblk* binary is compatible with FlexVolume specs so we can directly mount storage into PODs.
 
-Kubernetes, en plus du support de volumes built-in, dispose d'un plugin FlexVolume qui offre aux solutions de stockage tierce partie la possibilité d'implémenter un driver sans toucher au cœur de Kubernetes. Le binaire *torusblk* est compatible avec les spécifications FlexVolume de Kubernetes, ce qui permet de monter directement des volumes Torus dans des pods.
+# Demo on a Kubernetes cluster with etherpad-lite
 
-# Test sur un cluster Kubernetes : déploiement d'etherpad-lite
+This test takes place on Kubernetes 1.3 cluster with 3 CoreOS nodes. We are going to deploy Torus as a container, directly on Kubernetes. To work properly Torus needs :
 
-Ce test est réalisé sur un cluster Kubernetes 1.3, composé de 3 nœuds CoreOS dont 1 contrôleur. Nous allons déployer Torus directement via Kubernetes. Pour fonctionner, Torus a besoin :
-- Du module kernel nbd sur les workers Kubernetes
-- Du binaire torusblk installé dans le répertoire des drivers FlexVolume spécifié dans la configuration du Kubelet
-- De etcd en version 3
-- Du stockage disponible sur les workers Kubernetes
+  * NBD kernel module loaded
+  * Torus binary into the kubelet plugin directory
+  * Etcd v3
+  * Free storage on the nodes
 
-## Installation du plugin
+## Plugin installation
 
-Les binaires de Torus sont disponibles [ici](https://github.com/coreos/torus/releases).
+Torus binaries are available [here](https://github.com/coreos/torus/releases).
 
-Tout d'abord on vérifie la configuration du [Kubelet](http://kubernetes.io/docs/admin/kubelet/) :
+First let's check [Kubelet's](http://kubernetes.io/docs/admin/kubelet/) config :
 
 ```Bash
 # /etc/systemd/system/kubelet.service
@@ -97,22 +96,22 @@ RestartSec=10
 WantedBy=multi-user.target
 ```
 
-Il faut rajouter la ligne *volume-plugin-dir* si celle-ci n'est pas présente. Le chemin par défaut du Kubelet est `--volume-plugin-dir="/usr/libexec/kubernetes/kubelet-plugins/volume/exec/"` mais `/usr` est en lecture seule sur CoreOS.
+We need to add `volume-plugin-dir` if not already present. Default is `--volume-plugin-dir="/usr/libexec/kubernetes/kubelet-plugins/volume/exec/"` but `/usr` is in read-only in CoreOS.
 
-Le répertoire spécifié doit être ensuite créé, avant de copier le binaire `torusblk` en le renommant `torus` sur tous les workers du cluster dans `/etc/kubernetes/kubelet-plugins/volume/exec/coreos.com~torus/` :
+Then we need to create the directory and drop `torusblk` binary as `torus` on each node `/etc/kubernetes/kubelet-plugins/volume/exec/coreos.com~torus/` :
 
 ```Bash
 ansible -i ../ansible-coreos/inventory "worker*" -m file -b -a "dest=/etc/kubernetes/kubelet-plugins/volume/exec/coreos.com~torus mode=700 state=directory"
 ansible -i ../ansible-coreos/inventory "worker*" -m copy -b -a "src=/home/klefevre/go/src/github.com/coreos/torus/bin/torusblk dest=/etc/kubernetes/kubelet-plugins/volume/exec/coreos.com~torus/torus mode=700"
 ```
 
-Torus a également besoin du module kernel `nbd`. Il est possible de le charger à la volée :
+Torus also needs `nbd` kernel module. It can be loaded manually :
 
 ```Bash
 ansible -i ../ansible-coreos/inventory -m shell -b -a "modprobe nbd" "worker*"
 ```
 
-Ou par exemple pour CoreOS de le charger via cloud-init au démarrage :
+Or with cloud-init :
 
 ```YAML
 #cloud-config
@@ -125,15 +124,15 @@ coreos:
       command: restart
 ```
 
-Il faut ensuite redémarrer le Kubelet sur tous les nœuds et c'est terminé pour la partie pré-requis. Le reste se déroule uniquement sur Kubernetes :
+Finally we need to restart the Kubelet service on each node and we are done for the prerequisites. The remaining steps take place on Kubernetes :
 
 ```Bash
 ansible -i inventory -m shell -b -a "systemctl restart kubelet" "worker*"
 ```
 
-## Déploiement d'etcdv3
+## Etcdv3 deployment
 
-Pour fonctionner, Torus a besoin d'etcd en version 3 minimum, le service peut être déployé simplement sur Kubernetes et publié à l'aide d'un service :
+To work properly, Torus needs the latest etcd v3. It can be deploy on Kubernetes and publish with a service :
 
 ```YAML
 # etcdv3-daemonset.yml
@@ -201,7 +200,7 @@ spec:
         - name: ETCD_LISTEN_PEER_URLS
           value: http://$(POD_IP):2380
         - name: ETCD_DISCOVERY
-          value: https://discovery.etcd.io/         #-> url de discovery à générer avant déploiement
+          value: https://discovery.etcd.io/         #-> Get discovery URL before launching
       volumes:
       - name: etcdv3-data
         hostPath:
@@ -211,7 +210,7 @@ spec:
           path: /usr/share/ca-certificates/
 ```
 
-L'utilisation d'un DaemonSet permet de déployer une instance d'etcd par worker. Sur l'un des nœuds l'état du cluster peut être vérifié avec `etcdctl` via le service publié :
+Usage of DeamonSet ensure that there is one instance of etcd per node. Etcd cluster state can be validated with `etcdctl` and the Kubernetes service IP :
 
 ```Bash
 kubectl create -f etcdv3-daemonset.yml
@@ -236,9 +235,9 @@ a19d841707579e60: name=etcdv3-4jncl peerURLs=http://10.2.36.3:2380 clientURLs=ht
 d5479de5c3342460: name=etcdv3-o0n86 peerURLs=http://10.2.55.2:2380 clientURLs=http://10.2.55.3:2379 isLeader=false
 ```
 
-## Déploiement de Torus
+## Torus deployment
 
-Torus est aussi déployé directement sur Kubernetes, toujours via un DaemonSet qui permet d'avoir une instance de Torus par worker. Les blocs seront stockés dans un volume de l'hôte.
+Torus is also deployed on top of Kubernetes, also with a DaemonSet so there is one instance of Torus on each node. That instance is using local storage to populate Torus storage pool (with the host volume).
 
 ```YAML
 # torus-daemonset.yml
@@ -267,9 +266,9 @@ spec:
           containerPort: 4321
         env:
         - name: ETCD_HOST
-          value: 10.3.0.100                         #-> Cluster
+          value: 10.3.0.100                         #-> Etcd service clusterIP
         - name: STORAGE_SIZE
-          value: 5GiB                               #-> Taille maximum donnée au pool de stockage par worker
+          value: 5GiB                               #-> Storage pool maximum size
          - name: LISTEN_HOST
           valueFrom:
             fieldRef:
@@ -286,7 +285,7 @@ spec:
       volumes:
         - name: torus-data
           hostPath:
-            path: /srv/torus                        #-> repertoire de l'host contenant les données des volumes Torus
+            path: /srv/torus                        #-> HostPath with torus block device
 ```
 ```Bash
 kubectl create -f etcdv3-daemonset.yml
@@ -298,13 +297,13 @@ torus-87f9t   1/1       Running   0          1m
 torus-wc54r   1/1       Running   0          1m
 ```
 
-Sur la machine qui contrôle Kubernetes, le cluster peut être contrôlé à l'aide des binaires Torus et d'un port forward vers un pod etcd :
+On a machine running Kubectl, we can control Torus cluster with the binaries we saw previously. To do so we use the port forward feature of Kubectl to access an etcd pod :
 
 ```Bash
 kubectl port-forward etcdv3-4jncl
 ```
 
-Il est ensuite possible de contrôler Torus localement :
+That makes it possible to locally control Torus cluster :
 
 ```Bash
 torusctl list-peers
@@ -316,7 +315,7 @@ http://10.2.36.4:40000  dd800d8c-45f5-11e6-b812-02420a022404  5.0 GiB  0 B   OK 
 Balanced: true Usage:  0.00%
 ```
 
-Les 3 instances de Torus avec chacune 5 GiB dans le pool de stockage sont disponibles. Il faut ensuite créer un volume de 1 GiB pour *Etherpad* :
+So in our case, we have 3 instances with each a 5GiB pool, like we specified into Torus' manifest. We create a 1GiB volume for our etherpad app :
 
 ```Bash
 torusctl volume create-block pad 1GiB
@@ -326,11 +325,11 @@ VOLUME NAME  SIZE     TYPE
 pad          1.0 GiB  block
 ```
 
-Le volume est maintenant disponible et utilisable dans Kubernetes.
+The volume `pad` is now available has a Kubernetes volume.
 
-## Déploiement d'Etherpad
+## Etherpad deployment
 
-Etherpad est déployé simplement via un `deployment` et un `service` :
+Like the other, etherpad is deploy on top of Kubernetes with a `deployment` and a `service` :
 
 ```YAML
 # deployment-etherpad.yml
@@ -379,14 +378,14 @@ spec:
       volumes:
         - name: etherpad
           flexVolume:
-            driver: "coreos.com/torus"              #-> le driver pour le FlexVolume
+            driver: "coreos.com/torus"              #-> FlexVolume driver
             fsType: "ext4"
             options:
-              volume: "pad"                         #-> Le nom du volume créé precedemment
-              etcd: "10.3.0.100:2379"               #-> L'adresse du service etcd créé precedemment
+              volume: "pad"                         #-> Name of the previously created Torus volume
+              etcd: "10.3.0.100:2379"               #-> Etcd service clusterIP
 ```
 
-Vérification du déploiement :
+To check the deployment :
 
 ```Bash
 kubectl create -f ymlfiles/deployment-etherpad.yml
@@ -407,13 +406,13 @@ Session Affinity:       None
 No events.
 ```
 
-Pour des raisons de simplicité et en fonction de la configuration initiale, le service écoute également sur un `NodePort`, ce qui permet de joindre le service en accédant à n'importe quel worker sur le port 31594.
+To simplify the demo, etherpad service is published on a NodePort, it means that we can join the service on every node at port 31594.
 
-Pour tester la persistance des données, nous allons créer un pad nommé torus :
+To verify data persistence we are going to create a pad named "Torus" :
 
 <center><img src="img/torus/etherpad-pod1.png" alt="etherpad-pod1" width="500" align="middle"></center>
 
-L'intérêt est de marquer le nœud sur lequel fonctionne actuellement Etherpad comme non-schedulable (*cordon* dans les termes Kubernetes) puis de détruire le pod Etherpad afin de le rescheduler sur un autre nœud :
+To test, we are going to label a node as unschedulable (*cordon* in Kubernetes language), then destroy the etherpad pod that will be automatically reschedule on another node :
 
 ```bash
 kubectl describe pods etherpad-2266423034-6wk4u
@@ -438,7 +437,7 @@ NAME              STATUS                     AGE
 192.168.122.112   Ready                      4d
 ```
 
-Le scheduling est bien désactivé sur le nœud 192.168.122.111. On détruit le pod Etherpad qui sera ensuite relancé automatiquement grâce au *replicaset* défini dans le déploiement :
+Scheduling is disable on node 192.168.122.111. Let's detroy etherpad pod :
 
 ```Bash
 kubectl get pods --selector="app=etherpad"
@@ -449,7 +448,7 @@ kubectl delete pods etherpad-2266423034-6wk4u
 pod "etherpad-2266423034-6wk4u" deleted
 ```
 
-Vérification du nouveau pod :
+Check the new pod :
 
 ```Bash
 kubectl get pods --selector="app=etherpad"
@@ -470,16 +469,16 @@ Controllers:    ReplicaSet/etherpad-2266423034
 
 <center><img src="img/torus/etherpad-pod2.png" alt="etherpad-pod2" width="500" align="middle"></center>
 
-Bon, j'avoue que pour les captures d'écran, je vous invite à vous baser sur la confiance.
+Ok, it is just screen capture so I invite you to trust me on this one or test by yourself :)
 
 # Conclusion
 
-Torus est un produit très jeune qui vient s'inscrire dans la philosophie des autres produits open source lancés par CoreOS.
+Torus is a young product that fits right into the philosophy behind other OSS products launched by CoreOS.
 
-Si le stockage bloc a effectivement peu d'intérêt lors de l'utilisation d'un Cloud Provider puisque Kubernetes supporte déjà les PD sur GCE et les volumes EBS sur AWS, Torus va en revanche permettre, dans le cas d'une utilisation on premises ou de Cloud Providers différents, d'abstraire et d'agréger les volumes de multiples instances.
+Even if block storage has little interest on a Kubernetes supported cloud provider (Kubernetes already supports PD on GCE, EBS on AWS, Cinder on OpenStack), if you are running on premises or on an unspported cloud provider, Torus can be used to aggregate the storage of multiple instances at no cost.
 
-Enfin, en ce qui concerne GlusterFS et NFS, Torus ne joue pas encore sur le même terrain puisque seul le stockage bloc est aujourd'hui disponible.
+Finally, about GlusterFS and/or NFS, Torus is not at the same level as only block storage is available for now.
 
-Reste à voir non seulement comment le produit évolue mais également si l'engouement est au rendez-vous comme il l'a été pour CoreOS et leurs autres produits.
+Let's see how the product is going to evolve and also if it will be meeting the same kind of enthusiasm as other CoreOS products.
 
 **Kevin Lefevre**

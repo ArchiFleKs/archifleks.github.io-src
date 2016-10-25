@@ -19,7 +19,7 @@ description = "Kubernetes offers the Ingress feature, which abstract the configu
 
 <center><img src="img/kubernetes/kubernetes.png" alt="Kubernetes" width="400" align="middle"></center>
 
-This article originally appears on [Osones](http://blog.osones.com).
+This article originally appears on [Osones](http://blog.osones.com/en).
 
 Still with the alpha/beta features but not that much (it's been here since v1.1), this week we'll focus on the *Ingress* resource that makes publishing services a lot easier. First we'll see what *Ingress* and *Ingress Controller* are then we'll demo with an awesome cloud native reverse proxy that implements the Ingress feature. To stay swag, we'll throw in automatic and on the fly Let's Encrypt certificates generation, because it tastes better when it is free.
 
