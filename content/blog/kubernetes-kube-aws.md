@@ -19,7 +19,7 @@ description = "Deploy a Kubernetes cluster on AWS with CoreOS."
 
 <center><img src="img/kubernetes/kubernetes.png" alt="coreos" width="400" align="middle"></center>
 
-This article originally appears on [Osones](http://blog.osones.com).
+This article originally appears on [Osones](http://blog.osones.com/en/kubernetes-on-aws-with-kube-aws.html).
 
 This is the first article of the Kubernetes series. In this article, we are going to deploy a Kubernetes cluster on AWS and test some features - mostly the ones about cloud provider. The goal is not to deploy a cluster manually but to show a deployment method on a cloud provider we are using @Osones : Amazon Web Services
 
