@@ -20,31 +20,33 @@ description = "Discover Torus : an etcd backed distributed file system that can 
 
 <center><img src="img/kubernetes/kubernetes.png" alt="coreos" width="400" align="middle"></center>
 
-On continue dans la série Kubernetes avec un article sur Torus, un système de fichier distribué cloud-natif développé par CoreOS qui offre un stockage redondant et persistant aux pods Kubernetes.
+Still in the Kubernetes series, this week let's take a look at Torus, a cloud native distributed file system developed by CoreOS which give persistent storage to Kubernetes PODs.
 
 # Qu'est-ce que Torus ?
 
-Dans l'écosystème conteneurs, le stockage persistant reste un problème majeur : les applications stateless se conteneurisent facilement et n'ont généralement pas besoin de données persistantes. Ce n'est pas le cas des applications stateful telles que les bases de données par exemple. Dans l'écosystème Docker, il existe déjà des plugins de stockage basés sur des technologies diverses :
+In the container world, persistent storage is still a major issue : stateless application are easily moved to container based environment and do not usually need persistent data. This is not the case of stateful applications such as databases. For Docker, there are some plugins available already :
 
-- GlusterFS
-- NFS
-- [Convoy](https://github.com/rancher/convoy) (qui présente GlusterFS ou NFS (ainsi que d'autres backends) à Docker)
+  * GlusterFS
+  * NFS
+  * [Convoy](https://github.com/rancher/convoy) (abstracts GlusterFS and NFS backends to Docker)
 
-Du côté des volumes Kubernetes, de nombreux backends sont supportés :
+For Kubernetes volumes, several backends are supported :
 
-- iSCSI
-- GlusterFS
-- rbd (Ceph)
-- NFS
-- Volumes basés sur le Cloud Provider (GCE PD, AWS EBS, Azure Volume)
+  * iSCSI
+  * GlusterFS
+  * rbd (Ceph)
+  * NFS
+  * Volumes based on Cloud Provider (GCE PD, AWS EBS, Azure Volume)
 
-À l'exception des backends Cloud Providers, la plupart peuvent être relativement lourds à mettre en place (comme Ceph), ou à scaler dans une infrastructure cloud native orientée conteneurs et constituée d'un nombre conséquent de "petites" machines (GlusterFS/NFS).
+With the exception of cloud prodiver backends, most are difficult to deploy (like ceph) or to scale in an container based infrastructue composed of small and expendables instances.
 
-En juin 2016, CoreOS a annoncé la création d'un nouveau système de fichier distribué : Torus, qui a pour but de fournir du stockage distribué cloud natif.
+In June 2016, CoreOS annonced a new distributed file system : Torus, whose goal is to serve as cloud native distributed storage.
 
 <center><img src="img/torus/torus.svg" alt="Torus" width="500" align="middle"></center>
 
-Dans la philosophie micro services et GIFEE (*Google Infrastructure For Everyone Else*) de CoreOS, Torus, se concentre sur le stockage ; les parties metadata et consensus sont déléguées à *etcd* : un key/value store hautement scalable utilisé en production par des solutions comme Kubernetes et Docker Swarm. Torus supporte ainsi les fonctionnalités classiques des systèmes de fichiers distribués telles que la réplication ou la répartition équilibrée des données.
+In the spirit of micro services and GIFEE (*Google Infrastructure For Everyone Else*), Torus focuses on the storage : Metadata and consensus are enforced by *etcd* : A highly scalable key/value store used by Kubernetes or Docker Swarm. Torus supports all the features of modern file system such as replication and load balancing of data.
+
+What are the differences compared to  GlusterFS 
 
 Quelles sont les différences avec GlusterFS ou NFS ? Torus fournit pour le moment uniquement un stockage de type bloc via le protocole *nbd* (Network Block Device). De part son architecture, il sera possible ensuite d'exposer d'autres types de stockage notamment de l'objet ou encore du système de fichiers (comme NFS ou GlusterFS). Torus est également écrit en Go, compilé statiquement, ce qui le rend facilement portable et conteneurisable. Torus se décompose en 3 binaires :
 
