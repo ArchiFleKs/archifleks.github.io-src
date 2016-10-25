@@ -4,8 +4,8 @@ env:
     - HUGO_VERSION=0.17
 install:
   - pip install ghp-import
-  - wget -qO- https://github.com/spf13/hugo/releases/download/v$HUGO_VERSION/hugo_$HUGO_VERSION_Linux-64bit.tar.gz | tar xvz
 script:
+  - wget -qO- https://github.com/spf13/hugo/releases/download/v$HUGO_VERSION/hugo_$HUGO_VERSION_Linux-64bit.tar.gz | tar xvz
   - chmod +x ./hugo_$HUGO_VERSION_linux_amd64
   - ./hugo_$HUGO_VERSION_linux_amd64
   - ghp-import public
