@@ -236,9 +236,11 @@ DNS record is automatically created on Route53, and API connections are secured 
 
 To finish this article, we are going to publish a simple service, Minecraft, by using an ELB.
 
-First, we define a *replication controller* : `deployment-minecraft.yaml`.
+First, we define a replication controller :
 
 ```Yaml
+deployment-minecraft.yaml :
+---
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -277,9 +279,9 @@ minecraft-wj65z   1/1       Running   0          1m
 
 So Minecraft is running, for now the pod is only accessible inside the cluster. To make it accessible outisde the cluster we are going to create a Kubernetes service and use the load balancing feature by the cloud provider. Kubernetes is going to provision an ELB, open security groups and add the worker nodes into the backend pool automatically.
 
-`service-minecraft.yaml` :
-
 ```YAML
+service-minecraft.yaml :
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -353,7 +355,7 @@ a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com has address 5
 a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com has address 52.19.180.100
 ```
 
-*hosted-zone-id* must match ID of the Route53 zone in which we create the records. After that, we can access our services from a friendly URL : `minecraft.osones.io`.
+`hosted-zone-id` must match ID of the Route53 zone in which we create the records. After that, we can access our services from a friendly URL : `minecraft.osones.io`.
 
 ## Conclusion
 
