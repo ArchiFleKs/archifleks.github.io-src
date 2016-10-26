@@ -24,7 +24,7 @@ This article originally appears on [Osones](http://blog.osones.com/en/kubernetes
 
 Still in the Kubernetes series, this week let's take a look at Torus, a cloud native distributed file system developed by CoreOS which give persistent storage to Kubernetes PODs.
 
-# Qu'est-ce que Torus ?
+## What is Torus ?
 
 In the container world, persistent storage is still a major issue : stateless application are easily moved to container based environment and do not usually need persistent data. This is not the case of stateful applications such as databases. For Docker, there are some plugins available already :
 
@@ -54,13 +54,13 @@ What are the differences with GlusterFS or NFS ? Torus provides only block stora
   * *torusctl* : CLI to manage Torus
   * *torusblk* : CLI to manage Torus Block Devices
 
-# Kubernetes integration with Flex Volume
+## Kubernetes integration with Flex Volume
 
 Torus is independent from Kubernetes. It can be installed as a standalone application and expose volumes via NBD. These volume can then be used like any other block device.
 
 Kubernetes, in addition to built-in volumes, has a FlexVolume plugin that allows custom storage solution to implements a storage drivers without touching the heart of Kubernetes. *torusblk* binary is compatible with FlexVolume specs so we can directly mount storage into PODs.
 
-# Demo on a Kubernetes cluster with etherpad-lite
+## Demo on a Kubernetes cluster with etherpad-lite
 
 This test takes place on Kubernetes 1.3 cluster with 3 CoreOS nodes. We are going to deploy Torus as a container, directly on Kubernetes. To work properly Torus needs :
 
@@ -69,7 +69,7 @@ This test takes place on Kubernetes 1.3 cluster with 3 CoreOS nodes. We are goin
   * Etcd v3
   * Free storage on the nodes
 
-## Plugin installation
+### Plugin installation
 
 Torus binaries are available [here](https://github.com/coreos/torus/releases).
 
@@ -132,7 +132,7 @@ Finally we need to restart the Kubelet service on each node and we are done for 
 ansible -i inventory -m shell -b -a "systemctl restart kubelet" "worker*"
 ```
 
-## Etcdv3 deployment
+### Etcdv3 deployment
 
 To work properly, Torus needs the latest etcd v3. It can be deploy on Kubernetes and publish with a service :
 
@@ -237,7 +237,7 @@ a19d841707579e60: name=etcdv3-4jncl peerURLs=http://10.2.36.3:2380 clientURLs=ht
 d5479de5c3342460: name=etcdv3-o0n86 peerURLs=http://10.2.55.2:2380 clientURLs=http://10.2.55.3:2379 isLeader=false
 ```
 
-## Torus deployment
+### Torus deployment
 
 Torus is also deployed on top of Kubernetes, also with a DaemonSet so there is one instance of Torus on each node. That instance is using local storage to populate Torus storage pool (with the host volume).
 
@@ -329,7 +329,7 @@ pad          1.0 GiB  block
 
 The volume `pad` is now available has a Kubernetes volume.
 
-## Etherpad deployment
+### Etherpad deployment
 
 Like the other, etherpad is deploy on top of Kubernetes with a `deployment` and a `service` :
 
@@ -473,7 +473,7 @@ Controllers:    ReplicaSet/etherpad-2266423034
 
 Ok, it is just screen capture so I invite you to trust me on this one or test by yourself :)
 
-# Conclusion
+## Conclusion
 
 Torus is a young product that fits right into the philosophy behind other OSS products launched by CoreOS.
 
