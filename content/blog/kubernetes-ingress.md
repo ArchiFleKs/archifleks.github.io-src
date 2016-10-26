@@ -11,7 +11,7 @@ categories = [
     "Kubernetes"
 ]
 date = "2016-10-13"
-title = "Kubernetes Ingress, Træfɪk and Let's Encrypt"
+title = "Kubernetes Ingress with Træfɪk and Let's Encrypt"
 serie = "Kubernetes deep dive"
 description = "Kubernetes offers the Ingress feature, which abstract the configuration of a load balancer for services. Coupled with Træfɪk, a cloud reverse proxy, it is possible to add on the fly HTTPS encryption with Let's Encrypt."
 
@@ -21,15 +21,15 @@ description = "Kubernetes offers the Ingress feature, which abstract the configu
 
 This article originally appears on [Osones](http://blog.osones.com/en/kubernetes-ingress-controller-with-traefik-and-lets-encrypt.html).
 
-Still with the alpha/beta features but not that much (it's been here since v1.1), this week we'll focus on the *Ingress* resource that makes publishing services a lot easier. First we'll see what *Ingress* and *Ingress Controller* are then we'll demo with an awesome cloud native reverse proxy that implements the Ingress feature. To stay swag, we'll throw in automatic and on the fly Let's Encrypt certificates generation, because it tastes better when it is free.
+Still with the alpha/beta features but not that much (it's been here since v1.1), this week we'll focus on the Ingress resource that makes publishing services a lot easier. First we'll see what Ingress and Ingress Controller are then we'll demo with an awesome cloud native reverse proxy that implements the Ingress feature. To stay swag, we'll throw in automatic and on the fly Let's Encrypt certificates generation, because it tastes better when it is free.
 
 # Kubernetes Object
 
 ## Ingress Resource
 
-An *ingress* is a relatively simple object that defines a set of applicative routes. Those rules will allow the configuration of a reverse proxy in front of Kubernetes services.
+An Ingress is a relatively simple object that defines a set of applicative routes. Those rules will allow the configuration of a reverse proxy in front of Kubernetes services.
 
-Without *ingress*, Kubernetes services are directly exposed :
+Without an Ingress, Kubernetes services are directly exposed :
 
 ```
     internet
@@ -38,7 +38,7 @@ Without *ingress*, Kubernetes services are directly exposed :
   [ Services ]
 ```
 
-*Ingress* happens between the Internet and Kubernetes services :
+Ingress happens between the Internet and Kubernetes services :
 
 ```
     internet
@@ -48,7 +48,7 @@ Without *ingress*, Kubernetes services are directly exposed :
    [ Services ]
 ```
 
-How do we define *ingress* rules :
+How do we define an Ingress rules :
 
 ```YAML
 ---
@@ -87,15 +87,15 @@ spec:
 
 ```
 
-In the above example, we define virtual hosts, which are each routed to different backend. Each backend must have a Kubernetes service defined to ensure TCP/UDP load balancing to the correct set of PODs via *kube-proxy*.
+In the above example, we define virtual hosts, which are each routed to different backend. Each backend must have a Kubernetes service defined to ensure TCP/UDP load balancing to the correct set of PODs via **kube-proxy**.
 
 Ok so we have a YAML file, with a bunch of rules, but how do we use them ?
 
-To do so we have to use an *Ingress Controller*, it is not directly into Kubernetes but rely on external components that implements the [*ingress controller* specs](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
+To do so we have to use an Ingress Controller, it is not directly into Kubernetes but rely on external components that implements the [Ingress Controller specs](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
 
 ## Ingress Controller
 
-Alone, ingress definitions don't do much. To be applied, they need an *ingress controller* : a reverse proxy that's plugged into Kubernetes API, watches for creation/update/deletion of *ingress* rules, and configures itself accordingly.
+Alone, Ingress definitions don't do much. To be applied, they need an Ingress Controller : a reverse proxy that's plugged into Kubernetes API, watches for creation/update/deletion of Ingress rules, and configures itself accordingly.
 
 A controller does the following :
 
@@ -107,20 +107,20 @@ Google offers its own controller on GCE/GKE but there are others available based
 
   * [Nginx](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
   * [HA Proxy](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
-  * [Træfik](https://docs.traefik.io/toml/#kubernetes-ingress-backend)
+  * [Træfɪk](https://docs.traefik.io/toml/#kubernetes-ingress-backend)
   * Probably others
 
-# Let's Træfik and Let's Encrypt
+# Let's Træfɪk and Let's Encrypt
 
-What is [Træfik](https://traefik.io/) ?
+What is [Træfɪk](https://traefik.io/) ?
 
-> Træfik is a reverse proxy and load-balancer designed for micro services (e.g. Containers). It is very simple, written in Go, and supports a lot backend types : Consul, Etcd, Docker, Kubernetes, Mesos, etc. It can also be backed by a classic static configuration file and a mix of the above to act as a classic reverse proxy.
+> Træfɪk is a reverse proxy and load-balancer designed for micro services (e.g. Containers). It is very simple, written in Go, and supports a lot backend types : Consul, Etcd, Docker, Kubernetes, Mesos, etc. It can also be backed by a classic static configuration file and a mix of the above to act as a classic reverse proxy.
 
-In addition, Træfik supports the [ACME](https://github.com/ietf-wg-acme/acme/) protocol used by [Let's Encrypt](https://letsencrypt.org/). We are able to publish services and to support TLS automaticly and for free (and that's Cloud (automaticly, not free) !
+In addition, Træfɪk supports the [ACME](https://github.com/ietf-wg-acme/acme/) protocol used by [Let's Encrypt](https://letsencrypt.org/). We are able to publish services and to support TLS automaticly and for free (and that's Cloud (automaticly, not free) !
 
-## Træfik configuration for Kubernetes
+## Træfɪk configuration for Kubernetes
 
-First, we need to deploy the *ingress controller* with a *Deployment* :
+First, we need to deploy the Ingress controller with a Deployment :
 
 ```YAML
 ---
@@ -170,15 +170,15 @@ spec:
 ```
 
 
-We'are using experimental Træfik image because it includes the latest commits for Kubernetes and also for the HTTP Auth basic and digest that have not yet been merged into stable. To store Let's Encrypt certificates, we need to use a volume otherwise they will be regenerated every time the pod reboots. Let's encrypt has a 20 certificates per week rate limit so be careful :)
+We'are using experimental Træfɪk image because it includes the latest commits for Kubernetes and also for the HTTP Auth basic and digest that have not yet been merged into stable. To store Let's Encrypt certificates, we need to use a volume otherwise they will be regenerated every time the pod reboots. Let's encrypt has a 20 certificates per week rate limit so be careful :)
 
-I'm using an *HostPath* for the demo but you can use whatever volume type suits your configuration.
+I'm using an HostPath for the demo but you can use whatever volume type suits your configuration.
 
 The container is supposed to listen to 80 and 443 via the `hostPort` directive, which is pretty much the same as doing a `docker -p 80:80 -p 443:443` but without NAT. If you are using Kubernetes with [CNI](https://github.com/containernetworking/cni) as a [network plugin](http://kubernetes.io/docs/admin/network-plugins/), the `hostPort` directive is ignored and the container does not use the host network. A workaround is to use a `NodePort` or `ExternalIP` service.
 
-I don't know what you think about but it is a neat solution compare to using `HostPort`, especially in a cluster when you can use multiple Træfik instances and a Cloud Load Balancer (e.g on AWS).
+I don't know what you think about but it is a neat solution compare to using `HostPort`, especially in a cluster when you can use multiple Træfɪk instances and a Cloud Load Balancer (e.g on AWS).
 
-Optional, a service in front of Træfik :
+Optional, a service in front of Træfɪk :
 
 ```YAML
 ---
@@ -200,9 +200,9 @@ spec:
     - 178.32.28.59
 ```
 
-In my scenario, I have got only one node so I'm using an `externalIP`, all traffic to port 80 and 443 will be redirected to Træfik pod.
+In my scenario, I have got only one node so I'm using an `externalIP`, all traffic to port 80 and 443 will be redirected to Træfɪk pod.
 
-Still optional, it is possible to define a service to make Træfik webui accessible (it will be accessible from the outside and also published via Træfik and an *ingress* rule) :
+Still optional, it is possible to define a service to make Træfɪk webui accessible (it will be accessible from the outside and also published via Træfik and an Ingress rule) :
 
 ```YAML
 ---
@@ -220,7 +220,7 @@ spec:
       name: webui
 ```
 
-Finally and the most important, we define a *configmap* containing Træfik configuration :
+Finally and the most important, we define a ConfigMap containing Træfɪk configuration :
 
 ```YAML
 apiVersion: v1
@@ -257,7 +257,7 @@ We define entrypoints : `http` and `https` and a redirection between from `http`
 Then for Let's Encrypt configuration :
 
   * `email = "lefevre.kevin@gmail.com"` : username
-  * `storageFile = "/acme/acme.json"` : certificates storage file (it is also possible to use a KV store to share certificates between Træfik instances)
+  * `storageFile = "/acme/acme.json"` : certificates storage file (it is also possible to use a KV store to share certificates between Træfɪk instances)
   * `entryPoint = "https"` : entrypoint whre ACME is enabled
   * `onDemand = true` : enable on the fly generation
   * `onHostRule = true` : enable generation based on backend discovery
@@ -265,7 +265,7 @@ Then for Let's Encrypt configuration :
   * `[[acme.domains]]`
   * `main = "archifleks.net"` : Authorized domain
 
-Domain validation is done via DNS, it's important to have a record pointing to the Træfik node or to the load-balancer in front of the service (via cloud provider). In my case, I have a record `* IN A A.B.C.D` for `archifleks.net`.
+Domain validation is done via DNS, it's important to have a record pointing to the Træfɪk node or to the load-balancer in front of the service (via cloud provider). In my case, I have a record `* IN A A.B.C.D` for `archifleks.net`.
 
 
 Once all these files are ready, it's possible to merge them all in a single YAML or to pass each of them to Kubernetes. The files used for this article are available on [Github](https://github.com/ArchiFleKs/containers/tree/master/kubernetes/zero.vsense.fr)
@@ -412,7 +412,7 @@ sickrage-3769118260-h5c78                    1/1       Running   7          21d
 traefik-ingress-controller-379161919-3lhff   1/1       Running   0          51s
 ```
 
-Træfik startup logs :
+Træfɪk startup logs :
 
 ```
 time="2016-09-29T13:54:54Z" level=info msg="Preparing server https &{Network: Address::443 TLS:0xc42030ac00 Redirect:<nil> Auth:0xc4203f6df0}"
@@ -458,7 +458,7 @@ cat acme.json
 
 ```
 
-For now, Træfik is not serving any backend, to do so we must define *ingress* rules with [`ingress.yml`](https://raw.githubusercontent.com/ArchiFleKs/containers/master/kubernetes/zero.vsense.fr/ingress.yml) :
+For now, Træfɪk is not serving any backend, to do so we must define Ingress rules with [`ingress.yml`](https://raw.githubusercontent.com/ArchiFleKs/containers/master/kubernetes/zero.vsense.fr/ingress.yml) :
 
 ```
 kubectl create -f ingress.yml
@@ -467,7 +467,7 @@ ingress "traefik" configured
 ingress "kubernetes-dashboard" configured
 ```
 
-Træfik logs:
+Træfɪk logs:
 
 ```
 time="2016-09-29T14:05:51Z" level=debug msg="Waited for kubernetes config, OK"
@@ -544,7 +544,7 @@ time="2016-09-29T14:06:10Z" level=debug msg="Got certificate for domains [seedbo
 
 We can see 2 things :
 
-  * Backends are created on *ingress* rules detection
+  * Backends are created on Ingress rules detection
   * Certificates generation is done after backend addition to the pool
 
 Connectivity check :
@@ -583,12 +583,12 @@ Ok, for the demo I had to use insecure mode because of the staging API, truth be
 
 # Conclusion
 
-*Ingress* feature really does simplify application depoyment on Kubernetes. It adds another abstraction layer on top of a complex feature, especially in the container world, where time to live is very low and reverse proxies have to be dynamic.
+Ingress feature really does simplify application depoyment on Kubernetes. It adds another abstraction layer on top of a complex feature, especially in the container world, where time to live is very low and reverse proxies have to be dynamic.
 
-There are few *ingress controller* for now, Google is pushing its but it is only available on GCE. Another community maintained is the Nginx but it does not natively support Kubernetes and/or Let's Encrypt where Træfik does.
+There are few Ingress Controllers for now, Google is pushing its but it is only available on GCE. Another community maintained is the Nginx but it does not natively support Kubernetes and/or Let's Encrypt where Træfɪk does.
 
-Even if very few options are available in Træfik, there is a strong community and features are coming up quickly. Træfik already supports multiple backends such as Kubernetes, Mesos, Consul but also Let's Encrypt as we saw.
+Even if very few options are available in Træfɪk, there is a strong community and features are coming up quickly. Træfɪk already supports multiple backends such as Kubernetes, Mesos, Consul but also Let's Encrypt as we saw.
 
-About Kubernetes, the project is becoming more and more pluggable, with a high abstraction level, and rapidly evolving. For exemple with *FlexVolume* and *Dynamic Provisioning*, which allow custom storage solutions to interface with kubernetes without touching core Kubernetes code. It is the same thing with *ingress* controller where (in addition to OSS solution) allow editor to publish software comatible with Kubernetes and the *ingress* feature.
+About Kubernetes, the project is becoming more and more pluggable, with a high abstraction level, and rapidly evolving. For exemple with **FlexVolume** and **Dynamic Volume Provisioning**, which allow custom storage solutions to interface with kubernetes without touching core Kubernetes code. It is the same thing with Ingress controller where (in addition to OSS solution) allow editor to publish software comatible with Kubernetes and the Ingress feature.
 
 **Kevin Lefevre - [@ArchiFleKs](https://twitter.com/ArchiFleKs)**
