@@ -23,9 +23,9 @@ This article originally appears on [Osones](http://blog.osones.com/en/kubernetes
 
 This is the first article of the Kubernetes series. In this article, we are going to deploy a Kubernetes cluster on AWS and test some features - mostly the ones about cloud provider. The goal is not to deploy a cluster manually but to show a deployment method on a cloud provider we are using @Osones : Amazon Web Services
 
-# CoreOS : distribution of choice for Kubernetes
+## CoreOS Linux
 
-Kubernetes is an Open Source project launched in 2014 by Google. It became popular very quickly. This COE (*Container Orchestration Engine) can manage the life cycle of cloud native / micro services applications ([12 factor](http://12factor.net/) with containers. Kuberntes allows for clustering, automated deployment, horizontal scalability, with opened APIs. Configuration can be written in JSON or YAML.
+Kubernetes is an Open Source project launched in 2014 by Google. It became popular very quickly. This COE (Container Orchestration Engine) can manage the life cycle of cloud native / micro services applications ([12 factor](http://12factor.net/) with containers. Kuberntes allows for clustering, automated deployment, horizontal scalability, with opened APIs. Configuration can be written in JSON or YAML.
 
 Other COE exist out there, such as Apache Mesos or Docker Swarm.
 
@@ -36,43 +36,41 @@ We re deploying Kubernetes on CoreOS Linux : a minimalist distribution made for 
   * [Flannel](https://coreos.com/flannel/docs/latest/) : overlay network
   * [Fleet](https://coreos.com/fleet/) : low level orchestrator (distributed systemd)
 
-Member of the *Open Container Initiative* (OCI), *Core Inc* was among the first to push Kubernetes usage in production, and offers a packaged solution called Tectonic.
+Member of the Open Container Initiative (OCI), Core Inc was among the first to push Kubernetes usage in production and to offer a packaged solution called Tectonic.
 
 CoreOS is also the perfect distribution to run Kubernetes, even without using the commercial version.
 
-# The "CoreOS way"
-
-To respect best practices, the following features are deployed :
+To respect best practices, the following features are used :
 
   * TLS to secure communication
   * Service Discovery (SkyDNS) for Kubernetes
   * Cloud provider features : AWS
 
-Kuberntes supports multiple cloud prociders which allow the use of external components available in the cloud. For example, to publish services, it is possible to dynamicly provvision an *Elastic Load balancer* (ELB) and associated security rules.
+Kuberntes supports multiple cloud providers which allow the use of external components available in the cloud. For example, to publish services, it is possible to dynamically provision an *Elastic Load balancer* (ELB) and its security rules.
 
-# Cluster bootstrap
+## Cluster bootstrap
 
-To prepare the cluster, we are going to use [*kube-aws*](https://github.com/coreos/coreos-kubernetes/tree/master/multi-node/aws), a tools developed by CoreOS that used CloudFormation stacks to deploy on AWS. From A YAML template, *kube-aws* generates a CloudFormation template and userdate. Generated templates can be stored onto a version control system such as git, like [Terraform](https://www.terraform.io/) templates.
+To prepare the cluster, we are going to use [kube-aws](https://github.com/coreos/coreos-kubernetes/tree/master/multi-node/aws), a tools developed by CoreOS that uses CloudFormation stacks to deploy on AWS. From A YAML template, kube-aws generates a CloudFormation template and userdata. Generated templates can be stored onto a version control system such as git, like [Terraform](https://www.terraform.io/) templates.
 
-## Prerequisite
+### Prerequisite
 
 There are several objects in Kubernetes :
 
   * Pod : this is the smallest element, it can include one or more containers that are working together to form a single logical component.
-  * Replication Controller : manage the lifecyle of PODs, by ensuring a certain number of PODs is always availabale in the cluster (replicas).
+  * Replication Controller : manage the lifecyle of PODs, by ensuring a certain number of PODs is always available in the cluster (replicas).
   * Services : abstraction layer between external network and the cluster, it's a unique entry point wichi is then load balance between a set of pods managed by a replication controller.
 
 To install and manage Kubernetes, we need two binaries, you can drop them in `/usr/local/bin` :
 
-  * [*kube-aws*](https://github.com/coreos/coreos-kubernetes/releases) : cluster configuration and bootstrap
+  * [kube-aws](https://github.com/coreos/coreos-kubernetes/releases) : cluster configuration and bootstrap
   * kubectl : CLI tool to access Kubernetes APIs :
 
 ```
 curl -O https://storage.googleapis.com/kubernetes-release/release/v1.2.3/bin/linux/amd64/kubectl
 ```
-To be able to connect to EC2 instances, we need on SSH key and a valid IAM account to deploy the infrastrcture on AWS. TO secure communications inside the cluster, we are using *AWS Key Management Services* (KMS).
+To be able to connect to EC2 instances, we need on SSH key and a valid IAM account to deploy the infrastructure on AWS. To secure communications inside the cluster, we are using *AWS Key Management Services* (KMS).
 
-To generate a Key with *awscli* :
+To generate a Key with awscli :
 
 ```JSON
 aws --profile osones kms --region=eu-west-1 create-key --description="osones-k8s-clust kms"
@@ -90,7 +88,7 @@ aws --profile osones kms --region=eu-west-1 create-key --description="osones-k8s
 }
 ```
 
-## Cluster initialization
+### Initialization
 
 First we need AWS credentials :
 
@@ -182,7 +180,7 @@ stack template is valid.
 Validation OK!
 ```
 
-# Cluster bootstrap
+### Deployment
 
 Finally, we can deploy with a simple command `kube-aws up` :
 
@@ -234,7 +232,7 @@ current-context: kube-aws-osones-k8s-clust-context
 
 DNS record is automatically created on Route53, and API connections are secured via TLS.
 
-# Simple service demo
+## Demo with a simple service
 
 To finish this article, we are going to publish a simple service, Minecraft, by using an ELB.
 
@@ -357,9 +355,9 @@ a3b6af5e415f211e6b97202fce3039af-98360.eu-west-1.elb.amazonaws.com has address 5
 
 *hosted-zone-id* must match ID of the Route53 zone in which we create the records. After that, we can access our services from a friendly URL : `minecraft.osones.io`.
 
-# Conclusion
+## Conclusion
 
-There are serveral deployment methods for Kubernetes, via Ansible, Puppet, or Chef. They depends on the cloud provider. CoreOS is just one of them and one of the first to have integrated with Kubernetes and supported AWS.
+There are severals deployment methods for Kubernetes, via Ansible, Puppet, or Chef. They depends on the cloud provider. CoreOS is just one of them and one of the first to have integrated with Kubernetes and supported AWS.
 
 In a next series of articles, we'll move forward installation and focus on running Kubernetes and what the other available features are.
 

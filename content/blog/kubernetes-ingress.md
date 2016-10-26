@@ -23,9 +23,9 @@ This article originally appears on [Osones](http://blog.osones.com/en/kubernetes
 
 Still with the alpha/beta features but not that much (it's been here since v1.1), this week we'll focus on the Ingress resource that makes publishing services a lot easier. First we'll see what Ingress and Ingress Controller are then we'll demo with an awesome cloud native reverse proxy that implements the Ingress feature. To stay swag, we'll throw in automatic and on the fly Let's Encrypt certificates generation, because it tastes better when it is free.
 
-# Kubernetes Object
+## New Kubernetes objects
 
-## Ingress Resource
+### Ingress Resource
 
 An Ingress is a relatively simple object that defines a set of applicative routes. Those rules will allow the configuration of a reverse proxy in front of Kubernetes services.
 
@@ -93,7 +93,7 @@ Ok so we have a YAML file, with a bunch of rules, but how do we use them ?
 
 To do so we have to use an Ingress Controller, it is not directly into Kubernetes but rely on external components that implements the [Ingress Controller specs](https://github.com/kubernetes/contrib/tree/master/ingress/controllers)
 
-## Ingress Controller
+### Ingress Controller
 
 Alone, Ingress definitions don't do much. To be applied, they need an Ingress Controller : a reverse proxy that's plugged into Kubernetes API, watches for creation/update/deletion of Ingress rules, and configures itself accordingly.
 
@@ -110,7 +110,7 @@ Google offers its own controller on GCE/GKE but there are others available based
   * [Træfɪk](https://docs.traefik.io/toml/#kubernetes-ingress-backend)
   * Probably others
 
-# Let's Træfɪk and Let's Encrypt
+## Let's Træfɪk and Let's Encrypt
 
 What is [Træfɪk](https://traefik.io/) ?
 
@@ -118,7 +118,7 @@ What is [Træfɪk](https://traefik.io/) ?
 
 In addition, Træfɪk supports the [ACME](https://github.com/ietf-wg-acme/acme/) protocol used by [Let's Encrypt](https://letsencrypt.org/). We are able to publish services and to support TLS automaticly and for free (and that's Cloud (automaticly, not free) !
 
-## Træfɪk configuration for Kubernetes
+### Træfɪk configuration for Kubernetes
 
 First, we need to deploy the Ingress controller with a Deployment :
 
@@ -379,7 +379,7 @@ spec:
             - --logLevel=DEBUG
 ```
 
-## Demo
+### Demo
 
 On the cluster, we got the following pods :
 
@@ -581,7 +581,7 @@ Vary: Accept-Encoding
 
 Ok, for the demo I had to use insecure mode because of the staging API, truth be told, I messed up with volumes the first time and reach the rate limit so I could not generate any more certificates :)
 
-# Conclusion
+## Conclusion
 
 Ingress feature really does simplify application depoyment on Kubernetes. It adds another abstraction layer on top of a complex feature, especially in the container world, where time to live is very low and reverse proxies have to be dynamic.
 
