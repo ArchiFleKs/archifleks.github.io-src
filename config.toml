@@ -64,3 +64,8 @@ hightlightJS = true
     identifier = "osones"
     weight = 300
     url = "/osones/"
+[[menu.main]]
+    name = "resume"
+    identifier = "resume"
+    weight = 300
+    url = "/resume/"

@@ -1,4 +1,5 @@
-language: python
+language: node_js
+node_js
 env:
   global:
   - HUGO_VERSION=0.18.1
