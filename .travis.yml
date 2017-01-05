@@ -10,8 +10,8 @@ install:
 - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 - npm install --prefix static/resume
 - rm -rf static/resume/node_modules/markdown-resume/assets/{css/*,template/*}
-- ln -s static/resume/resume.css static/node_modules/markdown-resume/assets/css/.
-- ln -s static/resume/default.html static/node_modules/markdown-resume/assets/templates/.
+- ln -s static/resume/resume.css static/resume/node_modules/markdown-resume/assets/css/.
+- ln -s static/resume/default.html static/resume/node_modules/markdown-resume/assets/templates/.
 script:
 - static/resume/node_modules/markdown_resume/bin/md2resume static/resume/index.md
 - wget -qO- "https://github.com/spf13/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" | tar xvz --strip-components=1
