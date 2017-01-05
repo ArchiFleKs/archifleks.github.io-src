@@ -9,7 +9,7 @@ install:
 - pip install ghp-import
 - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 - npm install --prefix static/resume
-- rm -rf static/resume/node_modules/markdown-resume/assets/{css/*,template/*}
+- rm -rf static/resume/node_modules/markdown-resume/assets/{css/*,templates/*}
 - ln -s static/resume/resume.css static/resume/node_modules/markdown-resume/assets/css/.
 - ln -s static/resume/default.html static/resume/node_modules/markdown-resume/assets/templates/.
 script:
