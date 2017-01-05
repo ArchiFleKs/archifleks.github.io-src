@@ -15,7 +15,7 @@ cURLing and scheduling stuff on @OpenStack and @awscloud.
 
 ### Technical
 
-1. AWS/GCE/OpenStack
+1. AWS/GCP/OpenStack
 1. Routing/Switching
 1. Overlay Networking
 1. Kubernetes
