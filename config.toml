@@ -35,7 +35,7 @@ keywords = "cloud,openstack,aws,kubernetes,devops"
 ## Social Accounts
 [params.social]
 github = "ArchiFleKs"
-#instagram = "<username>"
+instagram = "livinthecloud"
 linkedin = "kevinlefevre/en"
 twitter = "ArchiFleKs"
 #facebook = "<username>"
@@ -44,7 +44,7 @@ email = "lefevre.kevin@gmail.com"
 
 ## Extras
 [params.extra]
-copyright = "© 2016. Kevin Lefevre. [Some Rights Reserved](https://creativecommons.org/licenses/by-sa/4.0/)." 
+copyright = "© 2017. Kevin Lefevre. [Some Rights Reserved](https://creativecommons.org/licenses/by-sa/4.0/)." 
 poweredBy = false
 hightlightJS = true
 
