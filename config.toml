@@ -60,11 +60,6 @@ hightlightJS = true
     weight = 200
     url = "/about/"
 [[menu.main]]
-    name = "osones"
-    identifier = "osones"
-    weight = 300
-    url = "/osones/"
-[[menu.main]]
     name = "resume"
     identifier = "resume"
     weight = 300
