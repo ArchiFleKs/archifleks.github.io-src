@@ -30,14 +30,20 @@ Terraform modules and configuration files used in this article can be found [her
 # Requirements
 
 - Working [Google Cloud SDK](https://cloud.google.com/sdk/).
+
 - `application default credentials` that Terraform can use out of the box without specifying provider configuration. To generate [`application default credentials`](https://cloud.google.com/docs/authentication/production):
+
 ```
  gcloud auth application-default login
 ```
 This generates a default access key for your apps, using you account rights. This will allow terraform to run out of the box with the same right as your GCP account.
+
 - [Terraform](https://www.terraform.io/downloads.html)
+
 - [Terragrunt](https://github.com/gruntwork-io/terragrunt/releases) : standalone Go binary, can be install anywhere is path if not available in distribution packages.
+
 - At least two GCP projects:
+
 ```
 gcloud projects create gke-blog-prod
 Create in progress for [https://cloudresourcemanager.googleapis.com/v1/projects/gke-blog-prod].
@@ -48,14 +54,20 @@ gcloud projects create gke-blog-prod
 Create in progress for [https://cloudresourcemanager.googleapis.com/v1/projects/gke-blog-preprod].
 Waiting for [operations/pc.3759965873816129841] to finish...done.
 ```
-- Billing enabled on both projects: `https://console.developers.google.com/project/${PROJECT_ID}/settings`
+
+- Billing enabled on both projects: 
+
+```
+https://console.developers.google.com/project/${PROJECT_ID}/settings
+```
+
 - Google Container API enabled on both projects:
+
 ```
 gcloud services enable container.googleapis.com --project gke-blog-preprod
 Waiting for async operation operations/tmo-acf.ff5396f9-57ab-422c-b7eb-f9bf9cf060a7 to complete...
 Operation finished successfully. The following command can describe the Operation details:
 gcloud services operations describe operations/tmo-acf.ff5396f9-57ab-422c-b7eb-f9bf9cf060a7
-
 
 gcloud services enable container.googleapis.com --project gke-blog-prod
 Waiting for async operation operations/tmo-acf.81d7dd57-1df2-44ac-8225-ccc46d98f1e4 to complete...
@@ -283,4 +295,4 @@ Terraform modules and configuration files used in this article can be found [her
 
 Terragrunt allows you to reuse generic modules for multiple environments, here we only use the GKE module, but you can add multiple modules inside the `env` folder, for example if you need a MySQL database or other GCP services, these modules will also use the GCP bucket for remote state locking and storage and all your environment state will be stored remotely.
 
-_Kevin Lefevre_
+**Kevin Lefevre**
