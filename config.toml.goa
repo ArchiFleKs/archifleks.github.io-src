@@ -38,13 +38,11 @@ github = "ArchiFleKs"
 instagram = "livinthecloud"
 linkedin = "kevinlefevre/en"
 twitter = "ArchiFleKs"
-#facebook = "<username>"
-#google = "<username>"
 email = "lefevre.kevin@gmail.com"
 
 ## Extras
 [params.extra]
-copyright = "© 2018. Kevin Lefevre. [Some Rights Reserved](https://creativecommons.org/licenses/by-sa/4.0/)."
+copyright = "© 2019. Kevin Lefevre. [Some Rights Reserved](https://creativecommons.org/licenses/by-sa/4.0/)."
 poweredBy = false
 hightlightJS = true
 
@@ -65,7 +63,7 @@ hightlightJS = true
     weight = 300
     url = "/resume/"
 [[menu.main]]
-    name = "talks"
-    identifier = "talks"
+    name = "clusterfrak-dynamics"
+    identifier = "cluster-frak-dynamics"
     weight = 300
-    url = "/talks/"
+    url = "https://clusterfrak-dynamics.github.io"

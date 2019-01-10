@@ -19,4 +19,4 @@ I usually write in French for [Osones' blog](http://blog.osones.com) and here in
 
 Feel free to [contact us](mailto:contact@osones.com).
 
-<img src="img/certifications/cka.png" alt="cka" height="70" align="middle" hspace="20"><img src="img/certifications/coa.png" alt="coa" height="50" hspace="20" align="middle"><img src="img/certifications/aws.png" alt="aws" height="30" align="middle" hspace="20">
+<img src="img/certifications/cka.png" alt="cka" height="70" align="middle" hspace="20"><img src="img/certifications/ckad.png" alt="cka" height="70" align="middle" hspace="20"><img src="img/certifications/coa.png" alt="coa" height="50" hspace="20" align="middle"><img src="img/certifications/aws.png" alt="aws" height="30" align="middle" hspace="20">
