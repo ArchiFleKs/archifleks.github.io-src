@@ -64,6 +64,6 @@ hightlightJS = true
     url = "/resume/"
 [[menu.main]]
     name = "clusterfrak-dynamics"
-    identifier = "cluster-frak-dynamics"
+    identifier = "clusterfrakdynamics"
     weight = 300
     url = "https://clusterfrak-dynamics.github.io"

@@ -1,8 +1,11 @@
 # Kévin Lefevre
 ## Cloud & DevOps Engineer
 
-Cloud Engineer / AWS Certified & COA #36 / Containers (K8s).
-cURLing and scheduling stuff on @OpenStack and @awscloud.
+/Certified AWS solution architect
+/Certified OpenStack Administrator (COA)
+/Certified Kubernetes Administrator (CKA)
+/Certified Kubernetes Application Developer (CKAD)
+/cURLing and scheduling stuff on @OpenStack and @awscloud.
 
 > <i class="fa fa-globe" aria-hidden="true"></i> [archifleks.github.io](https://archifleks.github.io)
 > <i class="fa fa-envelope" aria-hidden="true"></i> [lefevre.kevin@gmail.com](mailto:lefevre.kevin@gmail.com)
@@ -15,15 +18,14 @@ cURLing and scheduling stuff on @OpenStack and @awscloud.
 
 ### Technical
 
-1. AWS/GCP/OpenStack
-1. Routing/Switching
-1. Overlay Networking
+1. Cloud providers
+1. Networking
 1. Kubernetes
-1. Swarm
-1. Terraform/Heat/CFN
-1. Ansible/Salt/Bash
-1. CI/CD
-1. CoreOS/Docker/RKT
+1. OpenStack
+1. Infrastructure as Code
+1. Configuration management
+1. Continuous integration/deployment
+1. Containers
 
 ------
 
@@ -42,6 +44,8 @@ cURLing and scheduling stuff on @OpenStack and @awscloud.
 	Help teams adopt devops tools and migrate applications to the cloud.
 	Train company and schools (CentraleSupelec Paris) about Cloud and Containers.
 	Involvement in the organization of the french OpenStack community.
+	Help customer move to container and adopt Kubernetes.
+
 
 **CACIIS** *System and Network Engineer* __February 2014 to August 2015__
 	Created private cloud infrastructure based on VMware : datacenter architecture and management.
@@ -72,8 +76,8 @@ cURLing and scheduling stuff on @OpenStack and @awscloud.
 * **AWS**
 	Certified Solution Architect, I design infrastructure that leverage AWS services and help customers migrate workload to the Cloud.
 
-* **Containers**
-	I work with Docker and Kubernetes on multiple cloud providers, from helping developers build and containerize their application (CI/CD) to deploying either on public or private cloud. I also teach about containers at Centrale Supelec Paris and also directly to companies.
+* **Kubernetes**
+	Certified Kubernetes Administrator and Application Developer, I work with Kubernetes on multiple cloud providers, from helping developers build and containerize their application (CI/CD) to deploying either on public or private cloud. I also teach about containers at Centrale Supelec Paris and also directly to companies.
 
 ------
 
