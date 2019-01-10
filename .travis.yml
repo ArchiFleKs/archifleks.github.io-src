@@ -1,7 +1,7 @@
 language: python
 env:
   global:
-  - HUGO_VERSION="0.39"
+  - HUGO_VERSION="0.53"
   - TRAVIS_NODE_VERSION="7"
 before_install:
 - openssl aes-256-cbc -K $encrypted_ba844ae62b2d_key -iv $encrypted_ba844ae62b2d_iv -in deploy-archifleks.github.io.key.enc -out deploy-archifleks.github.io.key -d
