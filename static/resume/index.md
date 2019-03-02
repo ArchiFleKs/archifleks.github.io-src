@@ -5,6 +5,7 @@
 /Certified OpenStack Administrator (COA)
 /Certified Kubernetes Administrator (CKA)
 /Certified Kubernetes Application Developer (CKAD)
+/Certified Google Cloud Architect Professional
 /cURLing and scheduling stuff on @OpenStack and @awscloud.
 
 > <i class="fa fa-globe" aria-hidden="true"></i> [archifleks.github.io](https://archifleks.github.io)
