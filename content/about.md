@@ -13,7 +13,7 @@ comments = false
 
 +++
 
-I'm currently working at [Osones](http://osones.com): a French Tech company. We're mostly doing public Cloud integration on AWS and Cloud building on OpenStack. We're also pushing DevOps concepts to customers, from cloud native app development to production.
+I'm currently working at [Osones](http://osones.com): a French Tech company. We're mostly doing public Cloud integration on AWS and Cloud building on OpenStack. We're also pushing DevOps concepts to customers, from cloud native app development to production. Mostly focused on containerized application.
 
 I usually write in French for [Osones' blog](http://blog.osones.com) and here in English.
 
