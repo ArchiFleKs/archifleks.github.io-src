@@ -1,7 +1,7 @@
 # Kevin Lefevre
 ## Cloud & DevOps Engineer
 
-/Certified AWS solution architect
+/Certified AWS solution architect Professional
 /Certified OpenStack Administrator (COA)
 /Certified Kubernetes Administrator (CKA)
 /Certified Kubernetes Application Developer (CKAD)
@@ -40,7 +40,7 @@
 ### Experience
 
 **Osones** *Cloud Engineer* __August 2015 to present__
-	Amazon Web Services (AWS) and OpenStack.
+	Amazon Web Services (AWS) / OpenStack / GCP / Kubernetes
 	Build OpenStack Clouds for Worldwider retailer, Global Healthcare, Ministère de l'interieur.
 	Help teams adopt devops tools and migrate applications to the cloud.
 	Train company and schools (CentraleSupelec Paris) about Cloud and Containers.
