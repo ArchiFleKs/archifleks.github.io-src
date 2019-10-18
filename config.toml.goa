@@ -39,6 +39,9 @@ instagram = "livinthecloud"
 linkedin = "kevinlefevre/en"
 twitter = "ArchiFleKs"
 email = "lefevre.kevin@gmail.com"
+skype = "kevmattlefevre"
+keybase = "archifleks"
+gitlab = "archifleks"
 
 ## Extras
 [params.extra]
