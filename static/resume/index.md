@@ -8,8 +8,8 @@
 /Certified Google Cloud Architect Professional
 /cURLing and scheduling stuff on @OpenStack and @awscloud.
 
-> <i class="fa fa-globe" aria-hidden="true"></i> [archifleks.github.io](https://archifleks.github.io)
-> <i class="fa fa-envelope" aria-hidden="true"></i> [lefevre.kevin@gmail.com](mailto:lefevre.kevin@gmail.com)
+> <i class="fa fa-globe" aria-hidden="true"></i> [archifleks.github.io](https://particule.io)
+> <i class="fa fa-envelope" aria-hidden="true"></i> [lefevre.kevin@gmail.com](mailto:kevin@particule.io)
 > <i class="fa fa-github" aria-hidden="true"></i> [archifleks](https://github.com/ArchiFleKs)
 > <i class="fa fa-twitter-square" aria-hidden="true"></i> [ArchiFleKs](https://twitter.com/ArchiFleKs)
 > <i class="fa fa-linkedin-square" aria-hidden="true"></i> [kevinlefevre](https://fr.linkedin.com/in/kevinlefevre/en)
@@ -39,14 +39,19 @@
 
 ### Experience
 
-**Osones** *Cloud Engineer* __August 2015 to present__
+**Particule.** *Cloud Native Engineer* __January 2020 to present__
+	[particule.io](https://particule.io)
+	Amazon Web Services (AWS) / OpenStack / GCP / Kubernetes
+	Help customer move to Cloud Native Technology
+	Help teams adopt devops tools and migrate applications to the cloud.
+
+**Osones** *Cloud Engineer* __August 2015 to December 2019__
 	Amazon Web Services (AWS) / OpenStack / GCP / Kubernetes
 	Build OpenStack Clouds for Worldwider retailer, Global Healthcare, Ministère de l'interieur.
 	Help teams adopt devops tools and migrate applications to the cloud.
 	Train company and schools (CentraleSupelec Paris) about Cloud and Containers.
 	Involvement in the organization of the french OpenStack community.
 	Help customer move to container and adopt Kubernetes.
-
 
 **CACIIS** *System and Network Engineer* __February 2014 to August 2015__
 	Created private cloud infrastructure based on VMware : datacenter architecture and management.
@@ -60,12 +65,6 @@
 	Migrate centralized authentication from TACACS to FreeRADIUS.
 	Devices hardening (Brocade, Cisco Nexus, APC) to ensure PCI-DSS certification.
 	Design of an iso-production environment to prepare firewall migration.
-
-**Chamber of Trade and Industry** *System and Network Engineer* __Summers between 2011 and 2013__
-	VMware vSphere administration and life cycle.
-	VDI with Wyse and Citrix XenDesktop.
-	Network administration and optimization for VDI with multicast.
-	SAN administration and maintenance
 
 ------
 
