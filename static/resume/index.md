@@ -8,8 +8,8 @@
 /Certified Google Cloud Architect Professional
 /cURLing and scheduling stuff on @OpenStack and @awscloud.
 
-> <i class="fa fa-globe" aria-hidden="true"></i> [archifleks.github.io](https://particule.io)
-> <i class="fa fa-envelope" aria-hidden="true"></i> [lefevre.kevin@gmail.com](mailto:kevin@particule.io)
+> <i class="fa fa-globe" aria-hidden="true"></i> [particule.io](https://particule.io)
+> <i class="fa fa-envelope" aria-hidden="true"></i> [kevin@particule.io](mailto:kevin@particule.io)
 > <i class="fa fa-github" aria-hidden="true"></i> [archifleks](https://github.com/ArchiFleKs)
 > <i class="fa fa-twitter-square" aria-hidden="true"></i> [ArchiFleKs](https://twitter.com/ArchiFleKs)
 > <i class="fa fa-linkedin-square" aria-hidden="true"></i> [kevinlefevre](https://fr.linkedin.com/in/kevinlefevre/en)
