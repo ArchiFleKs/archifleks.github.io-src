@@ -14,6 +14,9 @@ title = "Kevin Lefevre"
 
 theme = "hugo-goa"
 
+[markup.goldmark.renderer]
+unsafe= true
+
 ## Hugo Built-in Features
 #disqusShortname = "archifleks" # Comment out to disable Disqus.
 googleAnalytics = "UA-85614178-1"
@@ -23,14 +26,14 @@ enableRobotsTXT = true
 [params]
 author = "Kevin Lefevre"
 intro = "Cloud Engineer"
-description = "Working <a href=\"https://osones.com/\">@Osones</a>. Also Container Evangelist, cURLing and scheduling stuff mostly on OpenStack, AWS & K8s."
+description = "Working <a href=\"https://particule.io.com/\">@particule</a> as a Cloud Native Architect, cURLing and scheduling stuff mostly on OpenStack, AWS & K8s."
 authorImage = "klefevre.png"
 dateFormat = "Jan 2, 2006"
 
 ## Site Meta Settings
 [params.meta]
 description = "Kevin Lefevre"
-keywords = "cloud,openstack,aws,kubernetes,devops"
+keywords = "cloud,openstack,aws,kubernetes,gcp,devops"
 
 ## Social Accounts
 [params.social]
@@ -45,7 +48,7 @@ gitlab = "archifleks"
 
 ## Extras
 [params.extra]
-copyright = "© 2019. Kevin Lefevre. [Some Rights Reserved](https://creativecommons.org/licenses/by-sa/4.0/)."
+copyright = "© 2020. Kevin Lefevre. [Some Rights Reserved](https://creativecommons.org/licenses/by-sa/4.0/)."
 poweredBy = false
 hightlightJS = true
 
@@ -70,3 +73,8 @@ hightlightJS = true
     identifier = "clusterfrakdynamics"
     weight = 300
     url = "https://clusterfrak-dynamics.github.io"
+[[menu.main]]
+    name = "particule.io"
+    identifier = "particule"
+    weight = 300
+    url = "https://particule.io"
