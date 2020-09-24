@@ -5,8 +5,8 @@
 /Certified OpenStack Administrator (COA)
 /Certified Kubernetes Administrator (CKA)
 /Certified Kubernetes Application Developer (CKAD)
+/Certified Terraform Associate
 /Certified Google Cloud Architect Professional
-/cURLing and scheduling stuff on @OpenStack and @awscloud.
 
 > <i class="fa fa-globe" aria-hidden="true"></i> [particule.io](https://particule.io)
 > <i class="fa fa-envelope" aria-hidden="true"></i> [kevin@particule.io](mailto:kevin@particule.io)
@@ -39,7 +39,7 @@
 
 ### Experience
 
-**Particule.** *Cloud Native Engineer* __January 2020 to present__
+**Particule.** *CTO & Co-founder* __January 2020 to present__
 	[particule.io](https://particule.io)
 	Amazon Web Services (AWS) / OpenStack / GCP / Kubernetes
 	Help customer move to Cloud Native Technology
