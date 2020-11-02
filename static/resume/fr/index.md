@@ -79,10 +79,10 @@
   [*Magnum*](http://docs.openstack.org/developer/magnum/) et [*OpenStack
   Ansible*](http://docs.openstack.org/developer/openstack-ansible/).
 
-* **ublic Cloud**
-  Certified Architect Professional sur AWS et GCP, je design des infrastructures Cloud Native grâce
-  aux services et accompagne les utilisateurs à migrer leurs applications dans
-  le respect des bonnes pratiques.
+* **Public Cloud**
+  Certified Architect Professional sur AWS et GCP, je design des infrastructures
+  Cloud Native grâce aux services et accompagne les utilisateurs à migrer leurs
+  applications dans le respect des bonnes pratiques.
 
 * **Kubernetes**
   Certified Kubernetes Administrator and Application Developer, je travaille
