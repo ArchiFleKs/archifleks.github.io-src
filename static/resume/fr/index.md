@@ -25,7 +25,7 @@
 1. OpenStack
 1. Infrastructure as Code
 1. Configuration management
-1. Ingération/Déploiement continue
+1. Intégration/Déploiement continue
 1. Conteneurs
 
 ------
@@ -79,10 +79,10 @@
   [*Magnum*](http://docs.openstack.org/developer/magnum/) et [*OpenStack
   Ansible*](http://docs.openstack.org/developer/openstack-ansible/).
 
-* **AWS**
-  Certified Solution Architect, je design des infrastructures cloud grâce aux
-  services AWS et j'aide les utilisateurs à migrer leurs applications sur Amazon
-  Web Services.
+* **ublic Cloud**
+  Certified Architect Professional sur AWS et GCP, je design des infrastructures Cloud Native grâce
+  aux services et accompagne les utilisateurs à migrer leurs applications dans
+  le respect des bonnes pratiques.
 
 * **Kubernetes**
   Certified Kubernetes Administrator and Application Developer, je travaille
