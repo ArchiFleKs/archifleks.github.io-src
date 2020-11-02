@@ -60,7 +60,7 @@
   -> Mise en place de l'infrastructure virtuelle VMware
   -> Virtualisation du réseau avec vCloud et VXLAN
 
-**Ingenico** Ingénieur système et réseau* __Février 2013 à Juillet 2013__
+**Ingenico** *Ingénieur système et réseau* __Février 2013 à Juillet 2013__
 
   -> Gestion de la supervision, création de cartes météo du réseau.
   -> Migration de l'authentification centralisée de TACACS vers FreeRADIUS.
