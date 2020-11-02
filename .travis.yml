@@ -13,8 +13,8 @@ install:
 - cp static/resume/resume.css static/resume/node_modules/markdown-resume/assets/css/.
 - cp static/resume/default.html static/resume/node_modules/markdown-resume/assets/templates/.
 script:
-- static/resume/node_modules/markdown-resume/bin/md2resume static/resume/index.md
-- static/resume/node_modules/markdown-resume/bin/md2resume static/resume/index.fr.md
+- static/resume/node_modules/markdown-resume/bin/md2resume static/resume/fr/index.md
+- static/resume/node_modules/markdown-resume/bin/md2resume static/resume/en/index.md
 - wget -qO- "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" | tar xvz
 - ls
 - ./hugo

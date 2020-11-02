@@ -64,10 +64,15 @@ hightlightJS = true
     weight = 200
     url = "/about/"
 [[menu.main]]
-    name = "resume"
-    identifier = "resume"
+    name = "resume.en"
+    identifier = "resume-en"
     weight = 300
-    url = "/resume/"
+    url = "/resume/en/"
+[[menu.main]]
+    name = "resume.fr"
+    identifier = "resume-fr"
+    weight = 300
+    url = "/resume/fr"
 [[menu.main]]
     name = "clusterfrak-dynamics"
     identifier = "clusterfrakdynamics"
